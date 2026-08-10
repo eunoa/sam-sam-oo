@@ -379,7 +379,6 @@
 
 ```json
 {
-  "projectProgress": 60,
   "taskStatus": {
     "total": 10,
     "todo": 3,
