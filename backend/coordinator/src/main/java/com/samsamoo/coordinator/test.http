@@ -1,0 +1,34 @@
+### 회원가입
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "name": "홍길동",
+  "email": "hong@test.com",
+  "password": "1234",
+  "language": "ko",
+  "timezone": "Asia/Seoul"
+}
+
+### 로그인
+POST http://localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "email": "hong@test.com",
+  "password": "1234"
+}
+
+### 내 정보 조회 (X-User-Id는 signup 응답에서 받은 userId로 바꿔주세요)
+GET http://localhost:8080/users/me
+X-User-Id: 1
+
+### 프로젝트 생성
+POST http://localhost:8080/projects
+X-User-Id: 1
+Content-Type: application/json
+
+{
+  "name": "테스트 프로젝트",
+  "description": "설명입니다"
+}
