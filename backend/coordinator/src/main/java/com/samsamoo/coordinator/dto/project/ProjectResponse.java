@@ -1,32 +1,37 @@
-package com.samsamoo.coordinator.dto.user;
+package com.samsamoo.coordinator.dto.project;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
+import com.samsamoo.coordinator.entity.enums.ProjectMemberRole;
 
-public class AvailabilityItem {
+public class ProjectResponse {
 
-    private DayOfWeek dayOfWeek;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private Long projectId;
+    private String name;
+    private String description;
+    private ProjectMemberRole role;
 
-    protected AvailabilityItem() {
+    public ProjectResponse(Long projectId,
+                           String name,
+                           String description,
+                           ProjectMemberRole role) {
+        this.projectId = projectId;
+        this.name = name;
+        this.description = description;
+        this.role = role;
     }
 
-    public AvailabilityItem(DayOfWeek dayOfWeek, LocalTime startTime, LocalTime endTime) {
-        this.dayOfWeek = dayOfWeek;
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public DayOfWeek getDayOfWeek() {
-        return dayOfWeek;
+    public String getName() {
+        return name;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+    public String getDescription() {
+        return description;
     }
 
-    public LocalTime getEndTime() {
-        return endTime;
+    public ProjectMemberRole getRole() {
+        return role;
     }
 }
