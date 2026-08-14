@@ -628,12 +628,14 @@ Response Body 없음.
   {
     "meetingId": 1,
     "title": "주간 프로젝트 회의",
-    "scheduledAt": "2026-08-12T20:00:00"
+    "scheduledAt": "2026-08-12T20:00:00",
+    "status": "FINISHED"
   },
   {
     "meetingId": 2,
     "title": "기획 회의",
-    "scheduledAt": "2026-08-15T20:00:00"
+    "scheduledAt": "2026-08-15T20:00:00",
+    "status": "SCHEDULED"
   }
 ]
 ```

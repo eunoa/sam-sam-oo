@@ -1,0 +1,419 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #202020;
+  color: #222;
+}
+
+/* =========================
+   전체 Layout
+========================= */
+
+.app-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* =========================
+   Sidebar
+========================= */
+
+.sidebar {
+  width: 150px;
+  min-height: 100vh;
+
+  padding: 28px 18px;
+
+  background: #d9d9d9;
+
+  flex-shrink: 0;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 24px;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.profile-image {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #999;
+}
+
+/* 프로필과 메뉴를 구분하는 선 */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #999;
+}
+
+.menu-item {
+  padding: 14px 12px;
+
+  border-radius: 8px;
+
+  font-size: 17px;
+  font-weight: 500;
+
+  color: #555;
+
+  cursor: pointer;
+
+  transition:
+  transform 0.2s ease,
+  border-color 0.2s ease,
+  box-shadow 0.2s ease;
+
+  text-decoration: none;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.45);
+
+  color: #222;
+}
+
+.menu-item.active {
+  background: #ffffff;
+
+  color: #222;
+
+  font-weight: 600;
+}
+
+/* =========================
+   Main Content
+========================= */
+
+.main-content {
+  flex: 1;
+  min-height: 100vh;
+
+  background: #fff;
+
+  margin: 24px 24px 24px 0;
+  padding: 40px 50px;
+}
+
+/* =========================
+   Dashboard
+========================= */
+
+.dashboard-page {
+  width: 100%;
+  max-width: none;
+}
+
+/* =========================
+   Dashboard Header
+========================= */
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid #222;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.create-project-button {
+  padding: 9px 16px;
+
+  border: 1px solid #c8c8c8;
+  border-radius: 14px;
+
+  background: #f5f5f5;
+
+  color: #444;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.create-project-button:hover {
+  background: #e8e8e8;
+
+  border-color: #999;
+
+  color: #222;
+
+  transform: translateY(-1px);
+}
+
+/* =========================
+   Dashboard Tabs
+========================= */
+
+.dashboard-tabs {
+  display: flex;
+  align-items: center;
+
+  gap: 28px;
+
+  padding: 16px 4px;
+
+  border-bottom: 1px solid #222;
+}
+
+.tab {
+  position: relative;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #888;
+
+  font-size: 13px;
+  font-weight: 400;
+
+  cursor: pointer;
+}
+
+.tab.active {
+  color: #222;
+  font-weight: 600;
+}
+
+/* =========================
+   Dashboard Content
+========================= */
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 28px;
+
+  margin-top: 30px;
+}
+
+.dashboard-section {
+  min-height: 380px;
+
+  padding: 24px;
+
+  background: #dcdcdc;
+
+  border-radius: 14px;
+}
+
+.dashboard-section h2 {
+  margin: 0 0 16px;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* =========================
+   Project
+========================= */
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-card {
+  width: 100%;
+  padding: 18px 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #d4d4d4;
+  border-radius: 12px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+    box-shadow: 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #aaa;
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+
+  cursor: pointer;
+}
+
+.project-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.project-card-name {
+  margin: 0;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.project-card-description {
+  margin: 5px 0 0;
+
+  font-size: 12px;
+  line-height: 1.5;
+
+  color: #777;
+}
+
+.project-card-role {
+  flex-shrink: 0;
+
+  padding: 4px 8px;
+
+  border-radius: 10px;
+
+  background: #eeeeee;
+
+  font-size: 9px;
+  color: #666;
+}
+
+/* =========================
+   Meeting
+========================= */
+
+.meeting-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.meeting-card {
+  width: 100%;
+
+  padding: 14px 16px;
+
+  background: #ffffff;
+
+  border: 1px solid #d4d4d4;
+  border-radius: 10px;
+
+  transition:
+  transform 0.2s ease,
+  border-color 0.2s ease,
+  box-shadow 0.2s ease;
+}
+
+.meeting-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #aaa;
+
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+
+  cursor: pointer;
+}
+
+.meeting-card-title {
+  margin: 0;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.meeting-card-date {
+  margin: 5px 0 0;
+
+  font-size: 10px;
+  line-height: 1.5;
+
+  color: #777;
+}
+
+/* =========================
+   View All
+========================= */
+
+.view-all-button {
+  display: block;
+
+  margin: 20px auto 0;
+  padding: 7px 14px;
+
+  border: 1px solid #c8c8c8;
+  border-radius: 14px;
+
+  background: #f5f5f5;
+
+  color: #444;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.view-all-button:hover {
+  background: #e8e8e8;
+
+  border-color: #999;
+
+  color: #222;
+
+  transform: translateY(-1px);
+}
