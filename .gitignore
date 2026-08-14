@@ -27,3 +27,6 @@ replay_pid*
 *.iml
 
 backend/coordinator/data/
+
+.postman/
+postman/

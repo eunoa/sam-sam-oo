@@ -3,6 +3,8 @@ package com.samsamoo.coordinator.service;
 
 import com.samsamoo.coordinator.dto.meeting.MeetingCreateRequest;
 import com.samsamoo.coordinator.dto.meeting.MeetingCreateResponse;
+import com.samsamoo.coordinator.dto.meeting.MeetingDetailResponse;
+import com.samsamoo.coordinator.dto.meeting.MeetingResponse;
 import com.samsamoo.coordinator.entity.Meeting;
 import com.samsamoo.coordinator.entity.Project;
 import com.samsamoo.coordinator.exception.CustomException;
@@ -11,6 +13,9 @@ import com.samsamoo.coordinator.repository.MeetingRepository;
 import com.samsamoo.coordinator.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -53,5 +58,36 @@ public class MeetingService {
     private Project findProject(Long projectId) {
         return projectRepository.findById(projectId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PROJECT_NOT_FOUND));
+    }
+
+    // 프로젝트별 회의 목록 조회
+    public List<MeetingResponse> getMeetings(Long projectId) {
+
+        findProject(projectId);
+
+        return meetingRepository.findByProject_ProjectId(projectId).stream()
+                .map(meeting -> new MeetingResponse(
+                        meeting.getMeetingId(),
+                        meeting.getTitle(),
+                        meeting.getScheduledAt(),
+                        meeting.getStatus()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    // 회의 상세 조회
+    public MeetingDetailResponse getMeeting(Long meetingId) {
+
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+
+        return new MeetingDetailResponse(
+                meeting.getMeetingId(),
+                meeting.getProject().getProjectId(),
+                meeting.getTitle(),
+                meeting.getScheduledAt(),
+                meeting.getStatus(),
+                meeting.getManualContent()
+        );
     }
 }
