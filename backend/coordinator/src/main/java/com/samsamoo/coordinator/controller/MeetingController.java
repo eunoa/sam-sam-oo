@@ -1,9 +1,6 @@
 package com.samsamoo.coordinator.controller;
 
-import com.samsamoo.coordinator.dto.meeting.MeetingCreateRequest;
-import com.samsamoo.coordinator.dto.meeting.MeetingCreateResponse;
-import com.samsamoo.coordinator.dto.meeting.MeetingDetailResponse;
-import com.samsamoo.coordinator.dto.meeting.MeetingResponse;
+import com.samsamoo.coordinator.dto.meeting.*;
 import com.samsamoo.coordinator.service.MeetingService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +16,7 @@ public class MeetingController {
         this.meetingService = meetingService;
     }
 
+    //회의 생성
     @PostMapping("/projects/{projectId}/meetings")
     public MeetingCreateResponse createMeeting(
             @PathVariable Long projectId,
@@ -41,5 +39,19 @@ public class MeetingController {
             @PathVariable Long meetingId) {
 
         return meetingService.getMeeting(meetingId);
+    }
+
+    // 회의 내용 입력
+    @PatchMapping("/meetings/{meetingId}/content")
+    public void UpdateContent(
+            @PathVariable Long meetingId,
+            @Valid @RequestBody MeetingContentUpdateRequest request){
+        meetingService.updateContent(meetingId, request);
+    }
+
+    // 회의 삭제
+    @DeleteMapping("/meetings/{meetingId}")
+    public void deleteMeeting( @PathVariable Long meetingId ) {
+        meetingService.deleteMeeting(meetingId);
     }
 }

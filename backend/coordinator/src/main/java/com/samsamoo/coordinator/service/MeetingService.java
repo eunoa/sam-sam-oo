@@ -1,10 +1,7 @@
 package com.samsamoo.coordinator.service;
 
 
-import com.samsamoo.coordinator.dto.meeting.MeetingCreateRequest;
-import com.samsamoo.coordinator.dto.meeting.MeetingCreateResponse;
-import com.samsamoo.coordinator.dto.meeting.MeetingDetailResponse;
-import com.samsamoo.coordinator.dto.meeting.MeetingResponse;
+import com.samsamoo.coordinator.dto.meeting.*;
 import com.samsamoo.coordinator.entity.Meeting;
 import com.samsamoo.coordinator.entity.Project;
 import com.samsamoo.coordinator.exception.CustomException;
@@ -89,5 +86,25 @@ public class MeetingService {
                 meeting.getStatus(),
                 meeting.getManualContent()
         );
+    }
+
+    // 회의 내용 입력
+    @Transactional
+    public void updateContent(Long meetingId, MeetingContentUpdateRequest request) {
+
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+
+        meeting.updateManualContent(request.getManualContent());
+    }
+
+    // 회의 삭제
+    @Transactional
+    public void deleteMeeting(Long meetingId) {
+
+        Meeting meeting = meetingRepository.findById(meetingId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEETING_NOT_FOUND));
+
+        meetingRepository.delete(meeting);
     }
 }
