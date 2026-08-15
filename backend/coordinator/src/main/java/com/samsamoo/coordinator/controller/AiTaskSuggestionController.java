@@ -1,5 +1,7 @@
 package com.samsamoo.coordinator.controller;
 
+import com.samsamoo.coordinator.dto.meeting.AiTaskApproveRequest;
+import com.samsamoo.coordinator.dto.meeting.AiTaskApproveResponse;
 import com.samsamoo.coordinator.dto.meeting.AiTaskSuggestionResponse;
 import com.samsamoo.coordinator.service.AiTaskSuggestionService;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +41,14 @@ public class AiTaskSuggestionController {
             @PathVariable Long suggestionId) {
 
         aiTaskSuggestionService.deleteSuggestion(meetingId, suggestionId);
+    }
+
+    // AI 업무 제안 승인 후 실제 Task 생성
+    @PostMapping("/meetings/{meetingId}/tasks/approve")
+    public AiTaskApproveResponse approveSuggestion(
+            @PathVariable Long meetingId,
+            @RequestBody AiTaskApproveRequest request) {
+
+        return aiTaskSuggestionService.approveSuggestion(meetingId, request);
     }
 }
