@@ -13,6 +13,7 @@ public enum ErrorCode {
     ALREADY_PROJECT_MEMBER(HttpStatus.CONFLICT, "이미 프로젝트에 참여 중인 사용자입니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     MEETING_NOT_FOUND(HttpStatus.NOT_FOUND, "회의를 찾을 수 없습니다."),
+    MEETING_SUMMARY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 생성된 회의 요약이 있습니다."),
     MEETING_SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, "회의 요약을 찾을 수 없습니다.");
 
     private final HttpStatus status;
