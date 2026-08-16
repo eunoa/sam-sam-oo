@@ -86,4 +86,16 @@ public class Task {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public void updateAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public void updateStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    public void updateDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
 }
