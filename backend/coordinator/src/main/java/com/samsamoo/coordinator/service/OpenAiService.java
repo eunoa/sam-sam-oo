@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.JsonNode;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -181,5 +182,50 @@ public class OpenAiService {
                 "ja",
                 "fr"
         ).contains(targetLanguage);
+    }
+
+    // 프로젝트 멤버들의 가능 시간과 시간대를 바탕으로 회의시간 추천
+    public String recommendMeetingTime(
+            LocalDate startDate,
+            LocalDate endDate,
+            Integer durationMinutes,
+            String availabilityInfo) {
+
+        String prompt =
+                "다음 프로젝트 멤버들의 가능 시간과 시간대를 분석해서 " +
+                        "모든 멤버가 참여하기 가장 적절한 회의시간을 추천해줘.\n" +
+                        "추천 가능한 날짜 범위: " + startDate + " ~ " + endDate + "\n" +
+                        "회의 시간: " + durationMinutes + "분\n\n" +
+                        "멤버별 가능 시간:\n" +
+                        availabilityInfo +
+                        "\n추천 결과는 날짜와 시간을 명확하게 포함해서 한 줄로 작성해줘.";
+
+        Map<String, Object> requestBody = Map.of(
+                "model", model,
+                "input", prompt
+        );
+
+        JsonNode response = restClient.post()
+                .uri("/v1/responses")
+                .body(requestBody)
+                .retrieve()
+                .body(JsonNode.class);
+
+        for (JsonNode output : response.path("output")) {
+
+            if ("message".equals(output.path("type").asText())) {
+
+                for (JsonNode content : output.path("content")) {
+
+                    if ("output_text".equals(content.path("type").asText())) {
+                        return content.path("text").asText();
+                    }
+                }
+            }
+        }
+
+        throw new RuntimeException(
+                "OpenAI 응답에서 회의시간 추천 결과를 찾을 수 없습니다."
+        );
     }
 }
