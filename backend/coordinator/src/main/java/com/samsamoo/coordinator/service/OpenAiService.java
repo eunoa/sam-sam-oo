@@ -1,5 +1,7 @@
 package com.samsamoo.coordinator.service;
 
+import com.samsamoo.coordinator.exception.CustomException;
+import com.samsamoo.coordinator.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -29,6 +31,7 @@ public class OpenAiService {
                 .build();
     }
 
+    // 회의 내용을 AI로 요약
     public String summarize(String manualContent) {
 
         String prompt =
@@ -59,9 +62,12 @@ public class OpenAiService {
             }
         }
 
-        throw new RuntimeException("OpenAI 응답에서 요약 내용을 찾을 수 없습니다.");
+        throw new RuntimeException(
+                "OpenAI 응답에서 요약 내용을 찾을 수 없습니다."
+        );
     }
 
+    // 회의 내용을 분석하여 AI 업무 제안 생성
     public List<String> suggestTasks(String manualContent) {
 
         String prompt =
@@ -98,7 +104,9 @@ public class OpenAiService {
         }
 
         if (resultText == null || resultText.isBlank()) {
-            throw new RuntimeException("OpenAI 응답에서 업무 제안 내용을 찾을 수 없습니다.");
+            throw new RuntimeException(
+                    "OpenAI 응답에서 업무 제안 내용을 찾을 수 없습니다."
+            );
         }
 
         List<String> suggestions = new ArrayList<>();
@@ -115,7 +123,13 @@ public class OpenAiService {
         return suggestions;
     }
 
+    // 전달받은 내용을 지정한 언어로 번역
     public String translate(String text, String targetLanguage) {
+
+        // 서비스에서 지원하는 언어인지 확인
+        if (!isSupportedLanguage(targetLanguage)) {
+            throw new CustomException(ErrorCode.UNSUPPORTED_LANGUAGE);
+        }
 
         String prompt =
                 "다음 내용을 " + targetLanguage + " 언어로 자연스럽고 정확하게 번역해줘.\n" +
@@ -136,9 +150,11 @@ public class OpenAiService {
         String translatedText = null;
 
         for (JsonNode output : response.path("output")) {
+
             if ("message".equals(output.path("type").asText())) {
 
                 for (JsonNode content : output.path("content")) {
+
                     if ("output_text".equals(content.path("type").asText())) {
                         translatedText = content.path("text").asText();
                         break;
@@ -154,5 +170,16 @@ public class OpenAiService {
         }
 
         return translatedText;
+    }
+
+    // 서비스에서 지원하는 언어인지 확인
+    private boolean isSupportedLanguage(String targetLanguage) {
+
+        return List.of(
+                "ko",
+                "en",
+                "ja",
+                "fr"
+        ).contains(targetLanguage);
     }
 }
