@@ -1,6 +1,7 @@
 package com.samsamoo.coordinator.controller;
 
 import com.samsamoo.coordinator.dto.project.*;
+import com.samsamoo.coordinator.security.CurrentUserId;
 import com.samsamoo.coordinator.service.ProjectService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +20,13 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<ProjectCreateResponse> createProject(@RequestHeader("X-User-Id") Long userId,
+    public ResponseEntity<ProjectCreateResponse> createProject(@CurrentUserId Long userId,
                                                                @RequestBody ProjectCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(userId, request));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProjectResponse>> getMyProjects(@RequestHeader("X-User-Id") Long userId) {
+    public ResponseEntity<List<ProjectResponse>> getMyProjects(@CurrentUserId Long userId) {
         return ResponseEntity.ok(projectService.getMyProjects(userId));
     }
 
@@ -40,14 +41,14 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<Void> deleteProject(@RequestHeader("X-User-Id") Long userId,
+    public ResponseEntity<Void> deleteProject(@CurrentUserId Long userId,
                                               @PathVariable Long projectId) {
         projectService.deleteProject(userId, projectId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{projectId}/members")
-    public ResponseEntity<MemberInviteResponse> inviteMember(@RequestHeader("X-User-Id") Long userId,
+    public ResponseEntity<MemberInviteResponse> inviteMember(@CurrentUserId Long userId,
                                                              @PathVariable Long projectId,
                                                              @RequestBody MemberInviteRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.inviteMember(userId, projectId, request));
@@ -59,7 +60,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}/members/{userId}")
-    public ResponseEntity<Void> removeMember(@RequestHeader("X-User-Id") Long requesterId,
+    public ResponseEntity<Void> removeMember(@CurrentUserId Long requesterId,
                                              @PathVariable Long projectId,
                                              @PathVariable Long userId) {
         projectService.removeMember(requesterId, projectId, userId);

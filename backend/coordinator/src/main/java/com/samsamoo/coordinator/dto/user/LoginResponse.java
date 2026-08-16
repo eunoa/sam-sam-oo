@@ -4,12 +4,12 @@ public class LoginResponse {
 
     private Long userId;
     private String name;
-    private String email;
+    private String accessToken;
 
-    public LoginResponse(Long userId, String name, String email) {
+    public LoginResponse(Long userId, String name, String accessToken) {
         this.userId = userId;
         this.name = name;
-        this.email = email;
+        this.accessToken = accessToken;
     }
 
     public Long getUserId() {
@@ -20,7 +20,7 @@ public class LoginResponse {
         return name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getAccessToken() {
+        return accessToken;
     }
 }
