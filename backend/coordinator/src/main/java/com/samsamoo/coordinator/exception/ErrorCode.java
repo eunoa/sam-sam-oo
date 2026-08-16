@@ -14,6 +14,9 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     MEETING_NOT_FOUND(HttpStatus.NOT_FOUND, "회의를 찾을 수 없습니다."),
     MEETING_SUMMARY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 생성된 회의 요약이 있습니다."),
+    AI_TASK_SUGGESTION_NOT_FOUND(HttpStatus.NOT_FOUND, "AI 업무 제안을 찾을 수 없습니다."),
+    TASK_NOT_FOUND(HttpStatus.NOT_FOUND, "업무를 찾을 수 없습니다."),
+    UNSUPPORTED_LANGUAGE(HttpStatus.BAD_REQUEST, "지원하지 않는 언어입니다."),
     MEETING_SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, "회의 요약을 찾을 수 없습니다.");
 
     private final HttpStatus status;
