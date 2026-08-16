@@ -200,6 +200,7 @@ public class TaskService {
                 task.getTitle(),
                 task.getDescription(),
                 task.getAssignee().getUserId(),
+                task.getAssignee().getName(),
                 task.getStatus(),
                 task.getDeadline(),
                 task.getCreatedAt()
