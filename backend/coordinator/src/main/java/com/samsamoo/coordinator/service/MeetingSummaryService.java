@@ -1,6 +1,7 @@
 package com.samsamoo.coordinator.service;
 
 import com.samsamoo.coordinator.dto.meeting.MeetingSummaryResponse;
+import com.samsamoo.coordinator.dto.meeting.MeetingTranslationResponse;
 import com.samsamoo.coordinator.entity.Meeting;
 import com.samsamoo.coordinator.entity.MeetingSummary;
 import com.samsamoo.coordinator.exception.CustomException;
@@ -72,6 +73,32 @@ public class MeetingSummaryService {
                 saved.getMeeting().getMeetingId(),
                 saved.getSummary(),
                 saved.getCreatedAt()
+        );
+    }
+
+    // 저장된 회의 요약을 지정한 언어로 번역
+    public MeetingTranslationResponse translateSummary(
+            Long meetingId,
+            String targetLanguage) {
+
+        meetingRepository.findById(meetingId)
+                .orElseThrow(() ->
+                        new CustomException(ErrorCode.MEETING_NOT_FOUND));
+
+        MeetingSummary meetingSummary =
+                meetingSummaryRepository.findByMeeting_MeetingId(meetingId)
+                        .orElseThrow(() ->
+                                new CustomException(ErrorCode.MEETING_SUMMARY_NOT_FOUND));
+
+        String translatedText = openAiService.translate(
+                meetingSummary.getSummary(),
+                targetLanguage
+        );
+
+        return new MeetingTranslationResponse(
+                meetingId,
+                targetLanguage,
+                translatedText
         );
     }
 }

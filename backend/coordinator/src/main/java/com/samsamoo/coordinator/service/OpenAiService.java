@@ -114,4 +114,45 @@ public class OpenAiService {
 
         return suggestions;
     }
+
+    public String translate(String text, String targetLanguage) {
+
+        String prompt =
+                "다음 내용을 " + targetLanguage + " 언어로 자연스럽고 정확하게 번역해줘.\n" +
+                        "원문의 의미와 구조를 최대한 유지하고, 번역 결과만 출력해줘.\n\n" +
+                        text;
+
+        Map<String, Object> requestBody = Map.of(
+                "model", model,
+                "input", prompt
+        );
+
+        JsonNode response = restClient.post()
+                .uri("/v1/responses")
+                .body(requestBody)
+                .retrieve()
+                .body(JsonNode.class);
+
+        String translatedText = null;
+
+        for (JsonNode output : response.path("output")) {
+            if ("message".equals(output.path("type").asText())) {
+
+                for (JsonNode content : output.path("content")) {
+                    if ("output_text".equals(content.path("type").asText())) {
+                        translatedText = content.path("text").asText();
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (translatedText == null || translatedText.isBlank()) {
+            throw new RuntimeException(
+                    "OpenAI 응답에서 번역 결과를 찾을 수 없습니다."
+            );
+        }
+
+        return translatedText;
+    }
 }
