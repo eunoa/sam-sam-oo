@@ -1,3 +1,4 @@
+import './Layout.css';
 import Sidebar from './Sidebar';
 
 function MainLayout({ children }) {

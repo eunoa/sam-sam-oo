@@ -1,3 +1,5 @@
+import './ProjectCard.css';
+
 function ProjectCard({ project }) {
   return (
     <article className="project-card">
