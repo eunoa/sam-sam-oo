@@ -10,6 +10,7 @@ Content-Type: application/json
   "timezone": "Asia/Seoul"
 }
 
+
 ### 로그인 (여기서 받은 accessToken을 아래 요청들의 {{accessToken}}에 넣어서 쓰면 됨)
 POST http://localhost:8080/users/login
 Content-Type: application/json
@@ -21,18 +22,30 @@ Content-Type: application/json
 
 ### 내 정보 조회 (Authorization 헤더에 로그인 응답의 accessToken을 Bearer로 넣어주세요)
 GET http://localhost:8080/users/me
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2ODk2ODY0LCJleHAiOjE3ODY5MDA0NjR9.wbrfphep5U2X64MYNCZ-d02jFh1SVJ-t-mQBu5A8vgXO6aNiFPL_gwXWCWUWapd1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2OTI4OTY1LCJleHAiOjE3ODY5MzI1NjV9.JiUX6LT1Uap_J9Plt0R2XHJ7-G7WHFKjWVhn31SyxC4U1izfoayNQV4L6flVeilm
 
 ### 로그아웃 (이 요청 이후로는 같은 accessToken이 더 이상 안 통해야 정상)
 POST http://localhost:8080/users/logout
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2ODk2ODY0LCJleHAiOjE3ODY5MDA0NjR9.wbrfphep5U2X64MYNCZ-d02jFh1SVJ-t-mQBu5A8vgXO6aNiFPL_gwXWCWUWapd1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2OTI4OTY1LCJleHAiOjE3ODY5MzI1NjV9.JiUX6LT1Uap_J9Plt0R2XHJ7-G7WHFKjWVhn31SyxC4U1izfoayNQV4L6flVeilm
 
 ### 프로젝트 생성
 POST http://localhost:8080/projects
-Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2ODk2ODY0LCJleHAiOjE3ODY5MDA0NjR9.wbrfphep5U2X64MYNCZ-d02jFh1SVJ-t-mQBu5A8vgXO6aNiFPL_gwXWCWUWapd1
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2OTI4OTY1LCJleHAiOjE3ODY5MzI1NjV9.JiUX6LT1Uap_J9Plt0R2XHJ7-G7WHFKjWVhn31SyxC4U1izfoayNQV4L6flVeilm
 Content-Type: application/json
 
 {
   "name": "테스트 프로젝트",
   "description": "설명입니다"
 }
+
+### 대시보드 조회
+GET http://localhost:8080/projects/1/dashboard
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2OTI4OTY1LCJleHAiOjE3ODY5MzI1NjV9.JiUX6LT1Uap_J9Plt0R2XHJ7-G7WHFKjWVhn31SyxC4U1izfoayNQV4L6flVeilm
+
+### 권한 체크 테스트 - 없는 프로젝트 조회
+GET http://localhost:8080/projects/999
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2OTI4OTY1LCJleHAiOjE3ODY5MzI1NjV9.JiUX6LT1Uap_J9Plt0R2XHJ7-G7WHFKjWVhn31SyxC4U1izfoayNQV4L6flVeilm
+
+### 팀원 목록 조회
+GET http://localhost:8080/projects/1/members
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzg2OTI4OTY1LCJleHAiOjE3ODY5MzI1NjV9.JiUX6LT1Uap_J9Plt0R2XHJ7-G7WHFKjWVhn31SyxC4U1izfoayNQV4L6flVeilm

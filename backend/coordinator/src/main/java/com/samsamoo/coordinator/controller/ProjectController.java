@@ -31,13 +31,15 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectDetailResponse> getProjectDetail(@PathVariable Long projectId) {
-        return ResponseEntity.ok(projectService.getProjectDetail(projectId));
+    public ResponseEntity<ProjectDetailResponse> getProjectDetail(@CurrentUserId Long userId,
+                                                                  @PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getProjectDetail(userId, projectId));
     }
 
     @GetMapping("/{projectId}/dashboard")
-    public ResponseEntity<ProjectDashboardResponse> getDashboard(@PathVariable Long projectId) {
-        return ResponseEntity.ok(projectService.getDashboard(projectId));
+    public ResponseEntity<ProjectDashboardResponse> getDashboard(@CurrentUserId Long userId,
+                                                                 @PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getDashboard(userId, projectId));
     }
 
     @DeleteMapping("/{projectId}")
@@ -55,8 +57,9 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/members")
-    public ResponseEntity<List<MemberDetailResponse>> getMembers(@PathVariable Long projectId) {
-        return ResponseEntity.ok(projectService.getMembers(projectId));
+    public ResponseEntity<List<MemberDetailResponse>> getMembers(@CurrentUserId Long userId,
+                                                                 @PathVariable Long projectId) {
+        return ResponseEntity.ok(projectService.getMembers(userId, projectId));
     }
 
     @DeleteMapping("/{projectId}/members/{userId}")
