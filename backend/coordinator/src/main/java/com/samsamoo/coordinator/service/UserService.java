@@ -8,6 +8,9 @@ import com.samsamoo.coordinator.exception.CustomException;
 import com.samsamoo.coordinator.exception.ErrorCode;
 import com.samsamoo.coordinator.repository.UserAvailabilityRepository;
 import com.samsamoo.coordinator.repository.UserRepository;
+import com.samsamoo.coordinator.security.JwtTokenProvider;
+import com.samsamoo.coordinator.security.TokenBlacklistService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +21,24 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class UserService {
 
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final UserRepository userRepository;
     private final UserAvailabilityRepository userAvailabilityRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenBlacklistService tokenBlacklistService;
 
     public UserService(UserRepository userRepository,
-                       UserAvailabilityRepository userAvailabilityRepository) {
+                       UserAvailabilityRepository userAvailabilityRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtTokenProvider jwtTokenProvider,
+                       TokenBlacklistService tokenBlacklistService) {
         this.userRepository = userRepository;
         this.userAvailabilityRepository = userAvailabilityRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.tokenBlacklistService = tokenBlacklistService;
     }
 
     @Transactional
@@ -33,11 +47,12 @@ public class UserService {
             throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
-        // TODO: 비밀번호 암호화(BCrypt 등) 적용 필요 - 인증 방식 확정 후 반영
+        // 평문 비밀번호를 그대로 저장하지 않고 BCrypt로 암호화해서 저장
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
         User user = new User(
                 request.getName(),
                 request.getEmail(),
-                request.getPassword(),
+                encodedPassword,
                 request.getLanguage(),
                 request.getTimezone()
         );
@@ -50,12 +65,32 @@ public class UserService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        if (!user.getPassword().equals(request.getPassword())) {
+        // 암호화된 비밀번호와 입력값을 비교 (평문 비교 X)
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
-        // TODO: 로그인 성공 시 세션/토큰(JWT 등) 발급 방식은 팀 협의 후 반영
-        return new LoginResponse(user.getUserId(), user.getName(), user.getEmail());
+        String accessToken = jwtTokenProvider.createToken(user.getUserId());
+        return new LoginResponse(user.getUserId(), user.getName(), accessToken);
+    }
+
+    public MessageResponse logout(String authorizationHeader) {
+        String token = resolveToken(authorizationHeader);
+
+        // 유효한 토큰이면 만료 시각까지 블랙리스트에 등록해서 재사용을 막는다.
+        // 토큰이 없거나 이미 잘못된 토큰이면 굳이 에러 내지 않고 그냥 로그아웃 처리(멱등하게)한다.
+        if (token != null && jwtTokenProvider.isValid(token)) {
+            tokenBlacklistService.blacklist(token, jwtTokenProvider.getExpiration(token));
+        }
+
+        return new MessageResponse("로그아웃되었습니다.");
+    }
+
+    private String resolveToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
+            return authorizationHeader.substring(BEARER_PREFIX.length());
+        }
+        return null;
     }
 
     public UserResponse getMe(Long userId) {

@@ -1,19 +1,25 @@
 package com.samsamoo.coordinator.service;
 
 import com.samsamoo.coordinator.dto.project.*;
+import com.samsamoo.coordinator.entity.Meeting;
 import com.samsamoo.coordinator.entity.Project;
 import com.samsamoo.coordinator.entity.ProjectMember;
+import com.samsamoo.coordinator.entity.Task;
 import com.samsamoo.coordinator.entity.User;
+import com.samsamoo.coordinator.entity.enums.MeetingStatus;
 import com.samsamoo.coordinator.entity.enums.ProjectMemberRole;
+import com.samsamoo.coordinator.entity.enums.TaskStatus;
 import com.samsamoo.coordinator.exception.CustomException;
 import com.samsamoo.coordinator.exception.ErrorCode;
+import com.samsamoo.coordinator.repository.MeetingRepository;
 import com.samsamoo.coordinator.repository.ProjectMemberRepository;
 import com.samsamoo.coordinator.repository.ProjectRepository;
+import com.samsamoo.coordinator.repository.TaskRepository;
 import com.samsamoo.coordinator.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +30,19 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final UserRepository userRepository;
+    private final TaskRepository taskRepository;
+    private final MeetingRepository meetingRepository;
 
     public ProjectService(ProjectRepository projectRepository,
                           ProjectMemberRepository projectMemberRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          TaskRepository taskRepository,
+                          MeetingRepository meetingRepository) {
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.userRepository = userRepository;
+        this.taskRepository = taskRepository;
+        this.meetingRepository = meetingRepository;
     }
 
     @Transactional
@@ -63,7 +75,8 @@ public class ProjectService {
                 .collect(Collectors.toList());
     }
 
-    public ProjectDetailResponse getProjectDetail(Long projectId) {
+    public ProjectDetailResponse getProjectDetail(Long userId, Long projectId) {
+        validateMember(projectId, userId);
         Project project = findProject(projectId);
 
         List<ProjectMemberSummary> members = projectMemberRepository.findByProject_ProjectId(projectId).stream()
@@ -79,18 +92,33 @@ public class ProjectService {
         );
     }
 
-    // TODO: Task/Meeting 도메인 개발 완료 후 실제 taskStatus/upcomingMeetings/recentMeetings 데이터 연동 필요
-    public ProjectDashboardResponse getDashboard(Long projectId) {
+    public ProjectDashboardResponse getDashboard(Long userId, Long projectId) {
+        validateMember(projectId, userId);
         findProject(projectId);
 
-        ProjectDashboardResponse.TaskStatusSummary taskStatus =
-                new ProjectDashboardResponse.TaskStatusSummary(0, 0, 0, 0);
-
-        return new ProjectDashboardResponse(
-                taskStatus,
-                Collections.emptyList(),
-                Collections.emptyList()
+        List<Task> tasks = taskRepository.findByProject_ProjectId(projectId);
+        ProjectDashboardResponse.TaskStatusSummary taskStatus = new ProjectDashboardResponse.TaskStatusSummary(
+                tasks.size(),
+                (int) tasks.stream().filter(t -> t.getStatus() == TaskStatus.TODO).count(),
+                (int) tasks.stream().filter(t -> t.getStatus() == TaskStatus.IN_PROGRESS).count(),
+                (int) tasks.stream().filter(t -> t.getStatus() == TaskStatus.DONE).count()
         );
+
+        List<Meeting> meetings = meetingRepository.findByProject_ProjectId(projectId);
+
+        List<ProjectDashboardResponse.MeetingSummaryItem> upcomingMeetings = meetings.stream()
+                .filter(m -> m.getStatus() == MeetingStatus.SCHEDULED)
+                .sorted(Comparator.comparing(Meeting::getScheduledAt))
+                .map(this::toMeetingSummaryItem)
+                .collect(Collectors.toList());
+
+        List<ProjectDashboardResponse.MeetingSummaryItem> recentMeetings = meetings.stream()
+                .filter(m -> m.getStatus() == MeetingStatus.FINISHED)
+                .sorted(Comparator.comparing(Meeting::getScheduledAt).reversed())
+                .map(this::toMeetingSummaryItem)
+                .collect(Collectors.toList());
+
+        return new ProjectDashboardResponse(taskStatus, upcomingMeetings, recentMeetings);
     }
 
     @Transactional
@@ -121,7 +149,8 @@ public class ProjectService {
         return toMemberInviteResponse(saved);
     }
 
-    public List<MemberDetailResponse> getMembers(Long projectId) {
+    public List<MemberDetailResponse> getMembers(Long userId, Long projectId) {
+        validateMember(projectId, userId);
         return projectMemberRepository.findByProject_ProjectId(projectId).stream()
                 .map(this::toMemberDetailResponse)
                 .collect(Collectors.toList());
@@ -147,6 +176,13 @@ public class ProjectService {
 
         if (member.getRole() != ProjectMemberRole.LEADER) {
             throw new CustomException(ErrorCode.NOT_PROJECT_LEADER);
+        }
+    }
+
+    // 프로젝트 소속 멤버(팀원 또는 팀장)인지 확인. 아니면 조회 자체를 막는다.
+    private void validateMember(Long projectId, Long userId) {
+        if (!projectMemberRepository.existsByProject_ProjectIdAndUser_UserId(projectId, userId)) {
+            throw new CustomException(ErrorCode.PROJECT_MEMBER_NOT_FOUND);
         }
     }
 
@@ -179,6 +215,14 @@ public class ProjectService {
                 pm.getUser().getLanguage(),
                 pm.getUser().getTimezone(),
                 pm.getRole()
+        );
+    }
+
+    private ProjectDashboardResponse.MeetingSummaryItem toMeetingSummaryItem(Meeting meeting) {
+        return new ProjectDashboardResponse.MeetingSummaryItem(
+                meeting.getMeetingId(),
+                meeting.getTitle(),
+                meeting.getScheduledAt()
         );
     }
 
