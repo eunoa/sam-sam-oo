@@ -1,0 +1,231 @@
+/* =========================================================
+   Project Create Page
+========================================================= */
+
+.project-create-page {
+  width: 100%;
+}
+
+
+/* =========================================================
+   Header
+========================================================= */
+
+.project-create-header {
+  margin-bottom: 28px;
+}
+
+.project-create-header h1 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.6px;
+}
+
+.project-create-header p {
+  margin: 7px 0 0;
+
+  color: #858a91;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   Form
+========================================================= */
+
+.project-create-form {
+  width: 100%;
+}
+
+.project-create-section {
+  width: 100%;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: #dcdcdc;
+
+  border-radius: 14px;
+}
+
+
+/* =========================================================
+   Field
+========================================================= */
+
+.project-create-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.project-create-field + .project-create-field {
+  margin-top: 20px;
+}
+
+.project-create-field label {
+  color: #33373c;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.project-create-field label span {
+  margin-left: 3px;
+
+  color: #b85c5c;
+}
+
+.project-create-field input,
+.project-create-field textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 8px;
+
+  background: #fff;
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.project-create-field input {
+  height: 40px;
+
+  padding: 0 12px;
+}
+
+.project-create-field textarea {
+  min-height: 110px;
+
+  padding: 11px 12px;
+
+  resize: vertical;
+
+  line-height: 1.5;
+}
+
+.project-create-field input::placeholder,
+.project-create-field textarea::placeholder {
+  color: #a0a4aa;
+}
+
+.project-create-field input:focus,
+.project-create-field textarea:focus {
+  border-color: #bfc2c7;
+
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================================
+   Actions
+========================================================= */
+
+.project-create-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+.project-create-cancel-button,
+.project-create-submit-button {
+  height: 38px;
+
+  padding: 0 15px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.project-create-cancel-button {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+  color: #777c83;
+}
+
+.project-create-cancel-button:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #33373c;
+}
+
+.project-create-submit-button {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+  color: #44484e;
+}
+
+.project-create-submit-button:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #222;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 768px) {
+  .project-create-header h1 {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 560px) {
+  .project-create-header h1 {
+    font-size: 23px;
+  }
+
+  .project-create-section {
+    padding: 18px;
+  }
+
+  .project-create-actions {
+    width: 100%;
+  }
+
+  .project-create-cancel-button,
+  .project-create-submit-button {
+    flex: 1;
+  }
+}

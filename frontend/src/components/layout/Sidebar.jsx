@@ -29,6 +29,7 @@ function Sidebar() {
 
         <NavLink
           to="/tasks"
+          end
           className={({ isActive }) =>
             isActive ? 'menu-item active' : 'menu-item'
           }

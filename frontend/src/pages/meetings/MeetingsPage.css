@@ -1,0 +1,593 @@
+/* =========================================================
+   Meetings Page
+========================================================= */
+
+.meetings-page {
+  width: 100%;
+}
+
+
+/* =========================================================
+   Header
+========================================================= */
+
+.meetings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.meetings-header h1 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.6px;
+}
+
+
+/* =========================================================
+   Create Meeting Button
+========================================================= */
+
+.create-meeting-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 36px;
+
+  padding: 0 14px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d2d3d5;
+  border-radius: 8px;
+
+  background: #fff;
+  color: #555960;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.create-meeting-button:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #222;
+}
+
+
+/* =========================================================
+   Meetings Tabs
+========================================================= */
+
+.meetings-tabs {
+  display: flex;
+  align-items: center;
+
+  gap: 28px;
+
+  margin-bottom: 24px;
+
+  padding-top: 12px;
+
+  border-top: 1px solid #e7e8ea;
+  border-bottom: 1px solid #e7e8ea;
+}
+
+.meetings-tabs .tab {
+  position: relative;
+
+  padding: 0 2px 14px;
+
+  border: 0;
+
+  background: transparent;
+  color: #999da4;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: color 0.15s ease;
+}
+
+.meetings-tabs .tab:hover {
+  color: #555;
+}
+
+.meetings-tabs .tab.active {
+  color: #222;
+  font-weight: 700;
+}
+
+.meetings-tabs .tab.active::after {
+  content: '';
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  bottom: -1px;
+
+  height: 2px;
+
+  background: #222;
+}
+
+
+/* =========================================================
+   Calendar Section
+========================================================= */
+
+.meeting-calendar-section {
+  width: 100%;
+
+  margin-bottom: 24px;
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background: #dcdcdc;
+
+  border-radius: 14px;
+}
+
+
+/* =========================================================
+   Calendar Header
+========================================================= */
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 16px;
+
+  margin-bottom: 14px;
+}
+
+.calendar-header h2 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Calendar Navigation
+========================================================= */
+
+.calendar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  padding: 0;
+
+  border: 1px solid #d2d3d5;
+  border-radius: 50%;
+
+  background: #fff;
+  color: #555;
+
+  font-size: 17px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.calendar-button:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #222;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   Calendar
+========================================================= */
+
+.calendar {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid #e4e5e7;
+  border-radius: 10px;
+
+  background: #fff;
+}
+
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+
+  grid-template-columns:
+    repeat(7, minmax(0, 1fr));
+}
+
+
+/* =========================================================
+   Calendar Weekdays
+========================================================= */
+
+.calendar-weekdays {
+  background: #f7f7f8;
+
+  border-bottom: 1px solid #e4e5e7;
+}
+
+.calendar-weekdays span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 32px;
+
+  color: #8b9098;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Calendar Day
+========================================================= */
+
+.calendar-day {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  min-height: 78px;
+
+  padding: 7px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border-right: 1px solid #eeeeef;
+  border-bottom: 1px solid #eeeeef;
+
+  overflow: hidden;
+}
+
+.calendar-day:nth-child(7n) {
+  border-right: 0;
+}
+
+
+/* =========================================================
+   Calendar Day Number
+========================================================= */
+
+.calendar-day-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 23px;
+  height: 23px;
+
+  margin-bottom: 4px;
+
+  color: #555;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.calendar-day.today .calendar-day-number {
+  border-radius: 50%;
+
+  background: #222;
+  color: #fff;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Calendar Meetings
+========================================================= */
+
+.calendar-meetings {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  gap: 3px;
+}
+
+.calendar-meeting {
+  display: block;
+
+  width: 100%;
+
+  padding: 3px 5px;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  border-radius: 4px;
+
+  background: #f1f2f4;
+  color: #555;
+
+  font-size: 9px;
+  line-height: 1.3;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.calendar-meeting:hover {
+  background: #e7e8ea;
+  color: #333;
+}
+
+.calendar-meeting.important {
+  background: #eceef0;
+  color: #222;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Meeting Sections
+========================================================= */
+
+.meeting-section {
+  width: 100%;
+
+  margin-bottom: 24px;
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background: #dcdcdc;
+
+  border: 1px solid #e4e5e7;
+  border-radius: 12px;
+}
+
+.meeting-section:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   Meeting Section Header
+========================================================= */
+
+.meeting-section > h2 {
+  margin: 0 0 16px;
+
+  color: #222;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   Project Group
+========================================================= */
+
+.meeting-project-group {
+  width: 100%;
+
+  margin-bottom: 18px;
+  padding: 18px;
+
+  box-sizing: border-box;
+
+  background: #f7f7f8;
+
+  border: 1px solid #d2d3d5;
+  border-radius: 12px;
+}
+
+.meeting-project-group:last-child {
+  margin-bottom: 0;
+}
+
+.meeting-project-group-title {
+  margin: 0 0 10px;
+
+  color: #44484e;
+
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   Meeting List
+========================================================= */
+
+.meeting-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+/* =========================================================
+   Meeting Page Card Override
+========================================================= */
+
+.meeting-section .meeting-card {
+  padding: 16px 18px;
+
+  border-color: #e8e9eb;
+  border-radius: 10px;
+
+  box-shadow: none;
+}
+
+.meeting-section .meeting-card:hover {
+  border-color: #d4d5d8;
+
+  box-shadow: none;
+}
+
+.meeting-section .meeting-card-title {
+  font-size: 14px;
+}
+
+.meeting-section .meeting-card-date {
+  font-size: 11px;
+}
+
+.meeting-section .meeting-card-summary {
+  font-size: 11px;
+}
+
+.meeting-section .meeting-card-actions {
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: none;
+}
+
+.meeting-section .meeting-minutes-button {
+  height: 32px;
+
+  padding: 0 12px;
+
+  border-radius: 7px;
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   Empty
+========================================================= */
+
+.meeting-empty {
+  margin: 0;
+
+  padding: 36px 20px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e4e5e7;
+  border-radius: 10px;
+
+  text-align: center;
+
+  color: #8b9098;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 768px) {
+  .meetings-header {
+    align-items: flex-start;
+
+    gap: 16px;
+  }
+
+  .meetings-header h1 {
+    font-size: 25px;
+  }
+
+  .meeting-calendar-section,
+  .meeting-section {
+    padding: 20px;
+  }
+
+  .calendar-day {
+    min-height: 64px;
+  }
+}
+
+
+@media (max-width: 560px) {
+  .meetings-header {
+    flex-direction: column;
+  }
+
+  .meetings-tabs {
+    gap: 18px;
+
+    overflow-x: auto;
+  }
+
+  .meetings-tabs .tab {
+    flex-shrink: 0;
+  }
+
+  .create-meeting-button {
+    align-self: flex-end;
+
+    flex-shrink: 0;
+  }
+
+  .meeting-calendar-section,
+  .meeting-section {
+    padding: 16px;
+  }
+
+  .calendar-day {
+    min-height: 56px;
+
+    padding: 5px;
+  }
+}

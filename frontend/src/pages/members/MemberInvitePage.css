@@ -1,0 +1,372 @@
+/* =========================================================
+   Member Invite Page
+========================================================= */
+
+.member-invite-page {
+  width: 100%;
+}
+
+
+/* =========================================================
+   Header
+========================================================= */
+
+.member-invite-header {
+  margin-bottom: 28px;
+}
+
+.member-invite-header h1 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.6px;
+}
+
+.member-invite-header p {
+  margin: 7px 0 0;
+
+  color: #858a91;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   Form
+========================================================= */
+
+.member-invite-form {
+  width: 100%;
+}
+
+.member-invite-section {
+  width: 100%;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: #dcdcdc;
+
+  border-radius: 14px;
+}
+
+
+/* =========================================================
+   Project
+========================================================= */
+
+.member-invite-project-name {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #c9c9c9;
+}
+
+.member-invite-project-name span {
+  color: #858a91;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.member-invite-project-name strong {
+  color: #33373c;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Field
+========================================================= */
+
+.member-invite-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-top: 20px;
+}
+
+.member-invite-field label {
+  color: #33373c;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.member-invite-field label span {
+  margin-left: 3px;
+
+  color: #b85c5c;
+}
+
+.member-invite-field input {
+  width: 100%;
+
+  height: 40px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 8px;
+
+  background: #fff;
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.member-invite-field input::placeholder {
+  color: #a0a4aa;
+}
+
+.member-invite-field input:focus {
+  border-color: #bfc2c7;
+
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================================
+   Actions
+========================================================= */
+
+.member-invite-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+.member-invite-cancel-button,
+.member-invite-submit-button {
+  height: 38px;
+
+  padding: 0 15px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.member-invite-cancel-button {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+  color: #777c83;
+}
+
+.member-invite-cancel-button:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #33373c;
+}
+
+.member-invite-submit-button {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+  color: #44484e;
+}
+
+.member-invite-submit-button:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #222;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 768px) {
+  .member-invite-header h1 {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 560px) {
+  .member-invite-header h1 {
+    font-size: 23px;
+  }
+
+  .member-invite-section {
+    padding: 18px;
+  }
+
+  .member-invite-actions {
+    width: 100%;
+  }
+
+  .member-invite-cancel-button,
+  .member-invite-submit-button {
+    flex: 1;
+  }
+}
+
+/* =========================================================
+   Invite Message
+========================================================= */
+
+.member-invite-message {
+  margin: 7px 0 0;
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.member-invite-message.error {
+  color: #b85c5c;
+}
+
+.member-invite-message.success {
+  color: #5f8068;
+}
+
+/* =========================================================
+   Invite Modal
+========================================================= */
+
+.member-invite-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+  box-sizing: border-box;
+
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.member-invite-modal {
+  width: min(360px, 100%);
+
+  padding: 28px 26px 24px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+  border: 1px solid #dedfe2;
+  border-radius: 14px;
+
+  text-align: center;
+
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.member-invite-modal-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  margin: 0 auto 14px;
+
+  border-radius: 50%;
+
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.member-invite-modal.success .member-invite-modal-icon {
+  background: #edf4ef;
+  color: #5f8068;
+}
+
+.member-invite-modal.error .member-invite-modal-icon {
+  background: #f8eded;
+  color: #b85c5c;
+}
+
+.member-invite-modal h2 {
+  margin: 0;
+
+  color: #33373c;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.member-invite-modal p {
+  margin: 9px 0 20px;
+
+  color: #777c83;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.member-invite-modal-confirm-button {
+  width: 100%;
+  height: 38px;
+
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+
+  background: #fff;
+  color: #44484e;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.member-invite-modal-confirm-button:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #222;
+}

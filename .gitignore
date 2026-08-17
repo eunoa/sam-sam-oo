@@ -30,3 +30,4 @@ backend/coordinator/data/
 
 .postman/
 postman/
+frontend/.env

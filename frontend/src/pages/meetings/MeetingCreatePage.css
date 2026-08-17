@@ -1,0 +1,379 @@
+/* =========================================================
+   Meeting Create Page
+========================================================= */
+
+.meeting-create-page {
+  width: 100%;
+}
+
+
+/* =========================================================
+   Header
+========================================================= */
+
+.meeting-create-header {
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid #222;
+}
+
+.meeting-create-header h1 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 24px;
+  font-weight: 600;
+
+  letter-spacing: -0.5px;
+}
+
+.meeting-create-description {
+  margin: 8px 0 0;
+
+  color: #888d94;
+
+  font-size: 13px;
+}
+
+
+/* =========================================================
+   Form
+========================================================= */
+
+.meeting-create-form {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 760px;
+
+  margin: 30px auto 0;
+
+  padding: 28px;
+
+  background: #dcdcdc;
+
+  border-radius: 14px;
+}
+
+
+/* =========================================================
+   Form Field
+========================================================= */
+
+.meeting-form-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-bottom: 20px;
+}
+
+.meeting-form-field label {
+  color: #333;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.meeting-form-field input,
+.meeting-form-field select {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 12px;
+
+  border: 1px solid #d8d9dc;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #fff;
+  color: #333;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.meeting-form-field input:focus,
+.meeting-form-field select:focus {
+  border-color: #999;
+
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =========================================================
+   AI Recommendation
+========================================================= */
+
+.ai-recommendation {
+  margin-bottom: 24px;
+
+  padding: 20px;
+
+  background: #fff;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+}
+
+.ai-recommendation-header {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 16px;
+}
+
+.ai-recommendation-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border-radius: 8px;
+
+  background: #f1f1f1;
+
+  font-size: 14px;
+}
+
+.ai-recommendation-header h2 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.ai-recommendation-content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.ai-recommendation-date {
+  display: flex;
+  align-items: baseline;
+
+  gap: 10px;
+}
+
+.ai-recommendation-date strong {
+  color: #222;
+
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ai-recommendation-date span {
+  color: #666;
+
+  font-size: 13px;
+}
+
+.ai-recommendation-reason {
+  margin: 0;
+
+  color: #888;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ai-recommendation-button {
+  align-self: flex-start;
+
+  margin-top: 4px;
+
+  padding: 8px 14px;
+
+  border: 1px solid #c8c8c8;
+  border-radius: 14px;
+
+  background: #f5f5f5;
+
+  color: #444;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.ai-recommendation-button:hover {
+  background: #e8e8e8;
+
+  border-color: #999;
+
+  color: #222;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   Important Meeting
+========================================================= */
+
+.meeting-form-important {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin: 2px 0 24px;
+
+  color: #555;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.meeting-form-star {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #b0b3b8;
+
+  font-size: 22px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.meeting-form-star:hover {
+  color: #777;
+
+  transform: scale(1.08);
+}
+
+.meeting-form-star.active {
+  color: #f2c94c;
+}
+
+
+/* =========================================================
+   Actions
+========================================================= */
+
+.meeting-create-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #c8c8c8;
+}
+
+.meeting-cancel-button,
+.meeting-create-submit-button {
+  height: 38px;
+
+  padding: 0 16px;
+
+  border-radius: 14px;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.meeting-cancel-button {
+  border: 1px solid #c8c8c8;
+
+  background: #f5f5f5;
+
+  color: #555;
+}
+
+.meeting-cancel-button:hover {
+  background: #e8e8e8;
+
+  border-color: #999;
+
+  color: #222;
+}
+
+.meeting-create-submit-button {
+  border: 1px solid #222;
+
+  background: #222;
+
+  color: #fff;
+}
+
+.meeting-create-submit-button:hover {
+  background: #444;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 768px) {
+  .meeting-create-form {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .meeting-create-header h1 {
+    font-size: 22px;
+  }
+
+  .meeting-create-actions {
+    flex-direction: column-reverse;
+  }
+
+  .meeting-cancel-button,
+  .meeting-create-submit-button {
+    width: 100%;
+  }
+}
