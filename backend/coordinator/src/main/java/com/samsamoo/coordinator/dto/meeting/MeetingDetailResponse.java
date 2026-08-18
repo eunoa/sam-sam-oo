@@ -12,19 +12,24 @@ public class MeetingDetailResponse {
     private LocalDateTime scheduledAt;
     private MeetingStatus status;
     private String manualContent;
+    private boolean important;
 
-    public MeetingDetailResponse(Long meetingId,
-                                 Long projectId,
-                                 String title,
-                                 LocalDateTime scheduledAt,
-                                 MeetingStatus status,
-                                 String manualContent) {
+    public MeetingDetailResponse(
+            Long meetingId,
+            Long projectId,
+            String title,
+            LocalDateTime scheduledAt,
+            MeetingStatus status,
+            String manualContent,
+            boolean important) {
+
         this.meetingId = meetingId;
         this.projectId = projectId;
         this.title = title;
         this.scheduledAt = scheduledAt;
         this.status = status;
         this.manualContent = manualContent;
+        this.important = important;
     }
 
     public Long getMeetingId() {
@@ -49,5 +54,9 @@ public class MeetingDetailResponse {
 
     public String getManualContent() {
         return manualContent;
+    }
+
+    public boolean isImportant() {
+        return important;
     }
 }

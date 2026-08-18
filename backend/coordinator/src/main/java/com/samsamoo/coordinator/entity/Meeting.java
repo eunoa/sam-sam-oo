@@ -35,6 +35,9 @@ public class Meeting {
     @Column(name = "manual_content")
     private String manualContent;
 
+    @Column(name = "is_important", nullable = false)
+    private boolean important = false;
+
     protected Meeting() {
     }
 
@@ -81,5 +84,13 @@ public class Meeting {
 
     public void updateManualContent(String manualContent) {
         this.manualContent = manualContent;
+        this.status = MeetingStatus.FINISHED;
+    }
+
+    public boolean isImportant() {
+        return important;
+    }
+    public void updateImportant(boolean important) {
+        this.important = important;
     }
 }
