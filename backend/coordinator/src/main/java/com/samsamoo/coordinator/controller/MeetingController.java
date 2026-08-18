@@ -54,4 +54,16 @@ public class MeetingController {
     public void deleteMeeting( @PathVariable Long meetingId ) {
         meetingService.deleteMeeting(meetingId);
     }
+
+    // 중요 회의 여부 변경
+    @PatchMapping("/meetings/{meetingId}/important")
+    public void updateImportant(
+            @PathVariable Long meetingId,
+            @RequestBody MeetingImportantUpdateRequest request) {
+
+        meetingService.updateImportant(
+                meetingId,
+                request
+        );
+    }
 }
