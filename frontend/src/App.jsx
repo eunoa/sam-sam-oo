@@ -31,153 +31,132 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ComingSoon from './pages/ComingSoon';
 
-
-import { ProjectProvider } from './context/ProjectContext';
-import { MeetingProvider } from './context/MeetingContext';
-
 function App() {
   return (
-<<<<<<< HEAD
-    <ProjectProvider>
-      <MeetingProvider>
-        <BrowserRouter>
-          <MainLayout>
-            <Routes>
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/meetings" element={<MeetingsPage />} />
-              <Route path="/tasks" element={<TasksPage />} />
-            </Routes>
-          </MainLayout>
-        </BrowserRouter>
-      </MeetingProvider>
-    </ProjectProvider>
-=======
     <BrowserRouter>
-
       <MeetingProvider>
         <TaskProvider>
           <ProjectProvider>
             <MemberProvider>
-
               <Routes>
-
-                {/* =========================
-                    인증 (레이아웃 없음)
-                ========================= */}
-
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
 
-
-                {/* =========================
-                    Dashboard
-                ========================= */}
-
                 <Route
                   path="/dashboard"
-                  element={<MainLayout><DashboardPage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <DashboardPage />
+                    </MainLayout>
+                  }
                 />
-
-
-                {/* =========================
-                    Meetings
-                ========================= */}
 
                 <Route
                   path="/meetings"
-                  element={<MainLayout><MeetingsPage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <MeetingsPage />
+                    </MainLayout>
+                  }
                 />
 
                 <Route
                   path="/meetings/create"
-                  element={<MainLayout><MeetingCreatePage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <MeetingCreatePage />
+                    </MainLayout>
+                  }
                 />
 
                 <Route
                   path="/meetings/:meetingId/minutes"
-                  element={<MainLayout><MeetingMinutesPage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <MeetingMinutesPage />
+                    </MainLayout>
+                  }
                 />
 
-                  <Route
-                    path="/projects/:projectId/meetings"
-                    element={<ProjectMeetingsPage />}
-                  />
-
-
-                {/* =========================
-                    Projects
-                ========================= */}
+                <Route
+                  path="/projects/:projectId/meetings"
+                  element={<ProjectMeetingsPage />}
+                />
 
                 <Route
                   path="/projects"
-                  element={<MainLayout><ProjectsPage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <ProjectsPage />
+                    </MainLayout>
+                  }
                 />
 
                 <Route
                   path="/projects/create"
-                  element={<MainLayout><ProjectCreatePage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <ProjectCreatePage />
+                    </MainLayout>
+                  }
                 />
-
-
-                {/* =========================
-                    Members
-                ========================= */}
 
                 <Route
                   path="/members/invite"
-                  element={<MainLayout><MemberInvitePage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <MemberInvitePage />
+                    </MainLayout>
+                  }
                 />
-
-
-                {/* =========================
-                    Tasks
-                ========================= */}
 
                 <Route
                   path="/tasks"
-                  element={<MainLayout><TasksPage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <TasksPage />
+                    </MainLayout>
+                  }
                 />
 
                 <Route
                   path="/tasks/create"
-                  element={<MainLayout><TaskCreatePage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <TaskCreatePage />
+                    </MainLayout>
+                  }
                 />
 
                 <Route
                   path="/projects/tasks"
-                  element={<MainLayout><ProjectTasksPage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <ProjectTasksPage />
+                    </MainLayout>
+                  }
                 />
-
-
-                {/* =========================
-                    Settings
-                ========================= */}
 
                 <Route
                   path="/settings"
-                  element={<MainLayout><SettingsPage /></MainLayout>}
+                  element={
+                    <MainLayout>
+                      <SettingsPage />
+                    </MainLayout>
+                  }
                 />
-
-
-                {/* =========================
-                    404
-                ========================= */}
 
                 <Route
                   path="*"
                   element={<ComingSoon title="페이지를 찾을 수 없어요" />}
                 />
-
               </Routes>
-
             </MemberProvider>
           </ProjectProvider>
         </TaskProvider>
       </MeetingProvider>
-
     </BrowserRouter>
->>>>>>> origin/feature/frontend-final
   );
 }
 
