@@ -13,8 +13,8 @@ function Home() {
     <div className="home-page">
       <header className="home-header">
         <div className="home-brand">
-          <div className="home-logo" />
-          <span className="home-app-name">앱 이름</span>
+          <span className="home-mark" aria-hidden="true" />
+          <span className="home-app-name">WorkBridge</span>
         </div>
         <Link to="/login" className="home-auth-link">
           로그인 / 회원가입
@@ -22,8 +22,14 @@ function Home() {
       </header>
 
       <main className="home-main">
+        <div className="home-hero-glow" aria-hidden="true" />
+
+        <span className="home-badge">AI 프로젝트 코디네이터</span>
+
         <p className="home-description">
-          앱 설명 글 앱 설명 글 앱 설명 글 앱 설명 글 앱 설명 글
+          AI가 프로젝트를 이해하고 협업을 도와주는
+          <br />
+          'AI 프로젝트 코디네이터'
         </p>
 
         <button type="button" className="home-start-button" onClick={handleStart}>

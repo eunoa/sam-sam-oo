@@ -45,15 +45,8 @@ function Login() {
       </Link>
 
       <div className="login-card">
-        <div className="login-logo">
-          <span>로고</span>
-        </div>
-        <h1 className="login-title">웹 이름</h1>
-        {USE_MOCK_AUTH && (
-          <p style={{ fontSize: 12, color: '#c0392b', marginTop: -32, marginBottom: 24 }}>
-            (임시 mock 로그인 모드 - 아무 값이나 입력해도 로그인됩니다)
-          </p>
-        )}
+        <span className="auth-mark" aria-hidden="true" />
+        <h1 className="login-title">WorkBridge</h1>
 
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="input-group">

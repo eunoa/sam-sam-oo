@@ -9,68 +9,165 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 40px;
+  padding: 22px 40px;
+  border-bottom: 1px solid #f0f0f1;
 }
 
 .home-brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 
-.home-logo {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: #d9d9d9;
+.home-mark {
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f0a35c, #e2793a);
+  box-shadow: 0 3px 8px rgba(226, 121, 58, 0.35);
 }
 
 .home-app-name {
-  font-size: 20px;
-  font-weight: 500;
-  color: #222;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  color: #1f2227;
 }
 
 .home-auth-link {
-  font-size: 15px;
-  color: #222;
+  padding: 9px 18px;
+  border: 1px solid #e2e3e5;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #33373c;
   text-decoration: none;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .home-auth-link:hover {
-  text-decoration: underline;
+  background: #f7f7f8;
+  border-color: #cfd1d5;
 }
 
 .home-main {
+  position: relative;
+
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 60px;
-  padding: 40px 24px 160px;
+  gap: 28px;
+  padding: 40px 24px 180px;
+
+  overflow: hidden;
+}
+
+.home-hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+
+  width: 640px;
+  height: 640px;
+
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(231, 154, 75, 0.16) 0%,
+    rgba(231, 154, 75, 0.05) 45%,
+    rgba(231, 154, 75, 0) 70%
+  );
+
+  pointer-events: none;
+}
+
+.home-badge {
+  position: relative;
+
+  padding: 7px 16px;
+
+  border-radius: 999px;
+  background: #fdf0e0;
+
+  color: #b6641f;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
 }
 
 .home-description {
-  max-width: 520px;
+  position: relative;
+
+  max-width: 560px;
   text-align: center;
-  font-size: 20px;
-  color: #2255cc;
-  text-decoration: underline;
+
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.5px;
+  color: #1f2227;
+
   margin: 0;
 }
 
 .home-start-button {
-  padding: 20px 64px;
+  position: relative;
+
+  padding: 18px 56px;
+
   border: none;
-  border-radius: 8px;
-  background: #d9d9d9;
-  color: #222;
-  font-size: 22px;
-  font-weight: 600;
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #f0a35c, #e2793a);
+  color: #fff;
+
+  font-size: 18px;
+  font-weight: 700;
+
   cursor: pointer;
+
+  box-shadow: 0 10px 24px rgba(226, 121, 58, 0.35);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
 }
 
 .home-start-button:hover {
-  background: #cfcfcf;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(226, 121, 58, 0.42);
+  background: linear-gradient(135deg, #eb9a4f, #d96e30);
+}
+
+.home-start-button:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(226, 121, 58, 0.35);
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 560px) {
+  .home-header {
+    padding: 18px 20px;
+  }
+
+  .home-description {
+    font-size: 22px;
+  }
+
+  .home-start-button {
+    width: 100%;
+    padding: 16px 0;
+  }
 }

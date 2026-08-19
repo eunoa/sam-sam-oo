@@ -52,9 +52,8 @@ function Signup() {
   return (
     <div className="signup-page">
       <div className="signup-card">
-        <div className="signup-logo">
-          <span>로고</span>
-        </div>
+        <span className="auth-mark" aria-hidden="true" />
+        <h1 className="signup-title">WorkBridge</h1>
 
         <form className="signup-form" onSubmit={handleSubmit}>
           <div className="field-group">
