@@ -1,0 +1,326 @@
+.tasks-page {
+  width: 100%;
+}
+
+
+/* =========================================================
+   Header
+========================================================= */
+
+.tasks-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.tasks-page-header h1 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.6px;
+}
+
+.tasks-page-header p {
+  margin: 7px 0 0;
+
+  color: #858a91;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.tasks-page-count {
+  flex-shrink: 0;
+
+  color: #777c83;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Filters
+========================================================= */
+
+.tasks-page-filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-bottom: 12px;
+}
+
+.tasks-page-filter {
+  height: 30px;
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+
+  background: #fff;
+  color: #777c83;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.tasks-page-filter:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #33373c;
+}
+
+.tasks-page-filter.active {
+  background: #33373c;
+  border-color: #33373c;
+  color: #fff;
+}
+
+.tasks-page-filter.active:hover {
+  background: #222;
+  border-color: #222;
+  color: #fff;
+}
+
+
+/* =========================================================
+   Section
+========================================================= */
+
+.tasks-page-section {
+  width: 100%;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  background: #f8f8f9;
+
+  border: 1px solid #e2e3e5;
+  border-radius: 14px;
+}
+
+
+/* =========================================================
+   List
+========================================================= */
+
+.tasks-page-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+
+/* =========================================================
+   Card
+========================================================= */
+
+.tasks-page-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  padding: 17px 18px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e1e2e4;
+  border-radius: 10px;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.tasks-page-card:hover {
+  border-color: #d4d5d8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.tasks-page-card-main {
+  min-width: 0;
+}
+
+.tasks-page-project {
+  margin-bottom: 5px;
+
+  color: #858a91;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.tasks-page-card h2 {
+  margin: 0;
+
+  color: #33373c;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.tasks-page-description {
+  margin: 6px 0 0;
+
+  color: #858a91;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   Meta
+========================================================= */
+
+.tasks-page-card-meta {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+.tasks-page-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 54px;
+  height: 26px;
+
+  padding: 0 8px;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.tasks-page-status-todo {
+  background: #f1f1f2;
+  color: #777c83;
+}
+
+.tasks-page-status-in_progress {
+  background: #eceff1;
+  color: #596168;
+}
+
+.tasks-page-status-done {
+  background: #e8e9ea;
+  color: #44484e;
+}
+
+.tasks-page-assignee,
+.tasks-page-deadline {
+  color: #777c83;
+
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   Empty
+========================================================= */
+
+.tasks-page-empty {
+  padding: 50px 20px;
+
+  color: #858a91;
+
+  font-size: 12px;
+
+  text-align: center;
+}
+
+/* =========================================================
+   Meta Detail
+========================================================= */
+
+.tasks-page-meta-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  gap: 3px;
+}
+
+.tasks-page-meta-label {
+  color: #a0a4aa;
+
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.tasks-page-meta-value {
+  color: #777c83;
+
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 700px) {
+  .tasks-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tasks-page-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tasks-page-card-meta {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .tasks-page-filters {
+    width: 100%;
+
+    overflow-x: auto;
+  }
+
+  .tasks-page-filter {
+    flex-shrink: 0;
+  }
+}
