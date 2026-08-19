@@ -10,6 +10,7 @@ import com.samsamoo.coordinator.exception.ErrorCode;
 import com.samsamoo.coordinator.repository.ProjectMemberRepository;
 import com.samsamoo.coordinator.repository.ProjectRepository;
 import com.samsamoo.coordinator.repository.UserAvailabilityRepository;
+import com.samsamoo.coordinator.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,23 +23,27 @@ public class MeetingTimeRecommendationService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final UserAvailabilityRepository userAvailabilityRepository;
+    private final UserRepository userRepository;
     private final OpenAiService openAiService;
 
     public MeetingTimeRecommendationService(
             ProjectRepository projectRepository,
             ProjectMemberRepository projectMemberRepository,
             UserAvailabilityRepository userAvailabilityRepository,
+            UserRepository userRepository,
             OpenAiService openAiService) {
 
         this.projectRepository = projectRepository;
         this.projectMemberRepository = projectMemberRepository;
         this.userAvailabilityRepository = userAvailabilityRepository;
+        this.userRepository = userRepository;
         this.openAiService = openAiService;
     }
 
     // 프로젝트 멤버들의 가능 시간을 분석하여 회의시간 추천
     public MeetingTimeRecommendationResponse recommendTime(
             Long projectId,
+            Long userId,
             MeetingTimeRecommendationRequest request) {
 
         // 프로젝트 존재 여부 확인
@@ -46,11 +51,19 @@ public class MeetingTimeRecommendationService {
                 .orElseThrow(() ->
                         new CustomException(ErrorCode.PROJECT_NOT_FOUND));
 
-        // 프로젝트에 참여하고 있는 멤버 전체 조회
+        // 현재 추천 요청을 보낸 사용자 조회
+        User requestUser = userRepository.findById(userId)
+                .orElseThrow(() ->
+                        new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // 프론트에서 보낸 date/startTime/endTime의 기준 시간대
+        String requestTimezone = requestUser.getTimezone();
+
+        // 해당 프로젝트에 참여하고 있는 멤버만 조회
         List<ProjectMember> projectMembers =
                 projectMemberRepository.findByProject_ProjectId(projectId);
 
-        // AI에 전달할 멤버별 가능 시간 정보 생성
+        // AI에 전달할 프로젝트 멤버들의 시간 정보
         StringBuilder availabilityInfo = new StringBuilder();
 
         for (ProjectMember projectMember : projectMembers) {
@@ -67,13 +80,11 @@ public class MeetingTimeRecommendationService {
                     .append(user.getTimezone())
                     .append("\n");
 
-            // 해당 사용자의 가능한 시간 조회
             List<UserAvailability> availabilities =
                     userAvailabilityRepository.findByUser_UserId(
                             user.getUserId()
                     );
 
-            // 사용자의 요일별 가능 시간 추가
             for (UserAvailability availability : availabilities) {
 
                 availabilityInfo
@@ -89,17 +100,12 @@ public class MeetingTimeRecommendationService {
             availabilityInfo.append("\n");
         }
 
-        // OpenAI를 이용하여 가장 적절한 회의시간 추천
-        String recommendation = openAiService.recommendMeetingTime(
-                request.getStartDate(),
-                request.getEndDate(),
-                request.getDurationMinutes(),
+        return openAiService.recommendMeetingTime(
+                request.getDate(),
+                request.getStartTime(),
+                request.getEndTime(),
+                requestTimezone,
                 availabilityInfo.toString()
-        );
-
-        return new MeetingTimeRecommendationResponse(
-                recommendation,
-                "프로젝트 멤버들의 가능 시간과 시간대를 기준으로 추천된 시간입니다."
         );
     }
 }

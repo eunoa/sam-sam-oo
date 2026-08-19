@@ -2,6 +2,7 @@ package com.samsamoo.coordinator.controller;
 
 import com.samsamoo.coordinator.dto.meeting.MeetingTimeRecommendationRequest;
 import com.samsamoo.coordinator.dto.meeting.MeetingTimeRecommendationResponse;
+import com.samsamoo.coordinator.security.CurrentUserId;
 import com.samsamoo.coordinator.service.MeetingTimeRecommendationService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +21,12 @@ public class MeetingTimeRecommendationController {
     @PostMapping("/projects/{projectId}/meetings/recommend-time")
     public MeetingTimeRecommendationResponse recommendTime(
             @PathVariable Long projectId,
+            @CurrentUserId Long userId,
             @RequestBody MeetingTimeRecommendationRequest request) {
 
         return meetingTimeRecommendationService.recommendTime(
                 projectId,
+                userId,
                 request
         );
     }

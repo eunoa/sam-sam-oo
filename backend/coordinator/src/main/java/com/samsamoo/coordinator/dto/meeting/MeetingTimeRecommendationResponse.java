@@ -2,19 +2,26 @@ package com.samsamoo.coordinator.dto.meeting;
 
 public class MeetingTimeRecommendationResponse {
 
-    private String recommendedTime;
+    private String date;
+    private String time;
     private String reason;
 
     public MeetingTimeRecommendationResponse(
-            String recommendedTime,
-            String reason) {
-
-        this.recommendedTime = recommendedTime;
+            String date,
+            String time,
+            String reason
+    ) {
+        this.date = date;
+        this.time = time;
         this.reason = reason;
     }
 
-    public String getRecommendedTime() {
-        return recommendedTime;
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public String getReason() {
