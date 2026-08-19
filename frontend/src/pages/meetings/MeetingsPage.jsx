@@ -49,6 +49,13 @@ function MeetingsPage() {
     );
   };
 
+  const isNeedsMinutes = (meeting) => {
+    return (
+      isPastMeeting(meeting) &&
+      !hasMinutes(meeting)
+    );
+  };
+
 
   /*
    * =========================
@@ -56,46 +63,44 @@ function MeetingsPage() {
    * =========================
    */
 
-  const upcomingMeetings = meetings.filter(
-    (meeting) =>
-      !isPastMeeting(meeting)
-  );
+  // 예정된 회의
+  const upcomingMeetings = meetings
+    .filter(
+      (meeting) =>
+        !isPastMeeting(meeting)
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.scheduledAt) -
+        new Date(b.scheduledAt)
+    );
 
-  /*
-   * 전체 회의에서 보여줄 지난 회의
-   *
-   * 회의록이 없어도 표시
-   * → 회의록 입력 가능
-   */
 
-  const allPastMeetings = meetings.filter(
-    (meeting) =>
-      isPastMeeting(meeting)
-  );
+  // 회의록 작성 완료
+  const completedMinutesMeetings = meetings
+    .filter(
+      (meeting) =>
+        isPastMeeting(meeting) &&
+        hasMinutes(meeting)
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.scheduledAt) -
+        new Date(a.scheduledAt)
+    );
 
-  /*
-   * 지난 회의 탭
-   *
-   * 회의록이 입력된 회의만
-   */
 
-  const pastMeetings = meetings.filter(
-    (meeting) =>
-      isPastMeeting(meeting) &&
-      hasMinutes(meeting)
-  );
-
-  /*
-   * 중요한 회의 탭
-   *
-   * 중요 + 회의록 입력 완료
-   */
-
-  const importantMeetings = meetings.filter(
-    (meeting) =>
-      meeting.isImportant &&
-      hasMinutes(meeting)
-  );
+  // 회의록 작성 필요
+  const needsMinutesMeetings = meetings
+    .filter(
+      (meeting) =>
+        isNeedsMinutes(meeting)
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.scheduledAt) -
+        new Date(a.scheduledAt)
+    );
 
 
   /*
@@ -109,7 +114,6 @@ function MeetingsPage() {
   ) => {
     return meetingList.reduce(
       (groups, meeting) => {
-
         const projectName =
           meeting.projectName ||
           '프로젝트 없음';
@@ -118,9 +122,7 @@ function MeetingsPage() {
           groups[projectName] = [];
         }
 
-        groups[projectName].push(
-          meeting
-        );
+        groups[projectName].push(meeting);
 
         return groups;
       },
@@ -134,19 +136,14 @@ function MeetingsPage() {
       upcomingMeetings
     );
 
-  const groupedAllPastMeetings =
+  const groupedCompletedMeetings =
     groupMeetingsByProject(
-      allPastMeetings
+      completedMinutesMeetings
     );
 
-  const groupedPastMeetings =
+  const groupedNeedsMinutesMeetings =
     groupMeetingsByProject(
-      pastMeetings
-    );
-
-  const groupedImportantMeetings =
-    groupMeetingsByProject(
-      importantMeetings
+      needsMinutesMeetings
     );
 
 
@@ -234,7 +231,6 @@ function MeetingsPage() {
 
     upcomingMeetings.forEach(
       (meeting) => {
-
         const date =
           new Date(
             meeting.scheduledAt
@@ -252,7 +248,7 @@ function MeetingsPage() {
     );
 
     return map;
-  }, [upcomingMeetings]);
+  }, [meetings]);
 
 
   /*
@@ -392,7 +388,6 @@ function MeetingsPage() {
     groupedMeetings,
     options = {}
   ) => {
-
     const {
       showMinutesButton = false,
       minutesButtonText = '회의록 입력',
@@ -408,7 +403,6 @@ function MeetingsPage() {
           projectMeetings,
         ]
       ) => (
-
         <div
           key={projectName}
           className="meeting-project-group"
@@ -422,7 +416,6 @@ function MeetingsPage() {
 
             {projectMeetings.map(
               (meeting) => (
-
                 <MeetingCard
                   key={
                     meeting.meetingId
@@ -447,14 +440,12 @@ function MeetingsPage() {
                     toggleImportant
                   }
                 />
-
               )
             )}
 
           </div>
 
         </div>
-
       )
     );
   };
@@ -548,7 +539,6 @@ function MeetingsPage() {
       ========================= */}
 
       {activeTab === 'all' && (
-
         <section className="meeting-calendar-section">
 
           <div className="calendar-header">
@@ -622,15 +612,12 @@ function MeetingsPage() {
                             {day}
                           </span>
 
-
                           {dayMeetings.length >
                             0 && (
-
                             <div className="calendar-meetings">
 
                               {dayMeetings.map(
                                 (meeting) => (
-
                                   <div
                                     key={
                                       meeting.meetingId
@@ -648,12 +635,10 @@ function MeetingsPage() {
                                       meeting.title
                                     }
                                   </div>
-
                                 )
                               )}
 
                             </div>
-
                           )}
 
                         </>
@@ -669,18 +654,17 @@ function MeetingsPage() {
           </div>
 
         </section>
-
       )}
 
 
       {/* =========================
-          전체 회의
           예정된 회의
+          
+          1순위
       ========================= */}
 
       {activeTab === 'all' &&
         upcomingMeetings.length > 0 && (
-
         <section className="meeting-section">
 
           <h2>예정된 회의</h2>
@@ -690,26 +674,53 @@ function MeetingsPage() {
           )}
 
         </section>
-
       )}
 
 
       {/* =========================
-          전체 회의
-          지난 회의
+          회의록 작성 완료
           
-          회의록 입력 가능
+          2순위
       ========================= */}
 
       {activeTab === 'all' &&
-        allPastMeetings.length > 0 && (
-
+        completedMinutesMeetings.length > 0 && (
         <section className="meeting-section">
 
-          <h2>지난 회의</h2>
+          <h2>회의록 작성 완료</h2>
 
           {renderMeetingGroups(
-            groupedAllPastMeetings,
+            groupedCompletedMeetings,
+            {
+              showMinutesButton: true,
+              minutesButtonText: '상세보기',
+              onMinutesClick:
+                (meetingId) =>
+                  handleMinutesView(
+                    meetingId,
+                    'all'
+                  ),
+            }
+          )}
+
+        </section>
+      )}
+
+
+      {/* =========================
+          회의록 작성 필요
+          
+          3순위
+      ========================= */}
+
+      {activeTab === 'all' &&
+        needsMinutesMeetings.length > 0 && (
+        <section className="meeting-section">
+
+          <h2>회의록 작성 필요</h2>
+
+          {renderMeetingGroups(
+            groupedNeedsMinutesMeetings,
             {
               showMinutesButton: true,
               minutesButtonText:
@@ -720,25 +731,23 @@ function MeetingsPage() {
           )}
 
         </section>
-
       )}
 
 
       {/* =========================
-          지난 회의 탭
+          지난 회의
           
-          회의록 입력 완료만
+          회의록 작성 완료만 표시
       ========================= */}
 
       {activeTab === 'past' &&
-        pastMeetings.length > 0 && (
-
+        completedMinutesMeetings.length > 0 && (
         <section className="meeting-section">
 
           <h2>지난 회의</h2>
 
           {renderMeetingGroups(
-            groupedPastMeetings,
+            groupedCompletedMeetings,
             {
               showMinutesButton: true,
               minutesButtonText:
@@ -753,25 +762,34 @@ function MeetingsPage() {
           )}
 
         </section>
-
       )}
 
 
       {/* =========================
           중요한 회의
           
-          중요 + 회의록 입력 완료
+          중요 + 회의록 작성 완료
       ========================= */}
 
       {activeTab === 'important' &&
-        importantMeetings.length > 0 && (
+        completedMinutesMeetings
+          .filter(
+            (meeting) =>
+              meeting.isImportant
+          )
+          .length > 0 && (
 
         <section className="meeting-section">
 
           <h2>중요한 회의</h2>
 
           {renderMeetingGroups(
-            groupedImportantMeetings,
+            groupMeetingsByProject(
+              completedMinutesMeetings.filter(
+                (meeting) =>
+                  meeting.isImportant
+              )
+            ),
             {
               showMinutesButton: true,
               minutesButtonText:
@@ -786,7 +804,6 @@ function MeetingsPage() {
           )}
 
         </section>
-
       )}
 
 
@@ -798,13 +815,16 @@ function MeetingsPage() {
         activeTab === 'all'
           ? (
               upcomingMeetings.length === 0 &&
-              allPastMeetings.length === 0
+              completedMinutesMeetings.length === 0 &&
+              needsMinutesMeetings.length === 0
             )
           : activeTab === 'past'
-            ? pastMeetings.length === 0
-            : importantMeetings.length === 0
+            ? completedMinutesMeetings.length === 0
+            : completedMinutesMeetings.filter(
+                (meeting) =>
+                  meeting.isImportant
+              ).length === 0
       ) && (
-
         <section className="meeting-empty">
 
           <p>
@@ -812,7 +832,6 @@ function MeetingsPage() {
           </p>
 
         </section>
-
       )}
 
     </div>

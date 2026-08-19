@@ -12,6 +12,7 @@ import MeetingMinutesPage from './pages/meeting/MeetingMinutesPage';
 
 import ProjectsPage from './pages/projects/ProjectsPage';
 import ProjectCreatePage from './pages/projects/ProjectCreatePage';
+import ProjectMeetingsPage from './pages/projects/ProjectMeetingsPage';
 
 import MemberInvitePage from './pages/members/MemberInvitePage';
 
@@ -84,6 +85,11 @@ function App() {
                   <Route
                     path="/projects/create"
                     element={<ProjectCreatePage />}
+                  />
+
+                  <Route
+                    path="/projects/:projectId/meetings"
+                    element={<ProjectMeetingsPage />}
                   />
 
 

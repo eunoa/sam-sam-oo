@@ -27,6 +27,16 @@ function MeetingMinutesPage() {
 
   /*
    * =========================
+   * 회의록 존재 여부
+   * =========================
+   */
+
+  const hasMinutes =
+    meeting?.minutes &&
+    meeting.minutes.trim() !== '';
+
+  /*
+   * =========================
    * 화면 모드
    *
    * edit
@@ -38,11 +48,11 @@ function MeetingMinutesPage() {
    */
 
   const mode =
-    location.state?.mode || 'edit';
+    location.state?.mode ||
+    (hasMinutes ? 'view' : 'edit');
 
   const isViewMode =
     mode === 'view';
-
 
   /*
    * =========================
@@ -62,6 +72,14 @@ function MeetingMinutesPage() {
   const fromTab =
     location.state?.fromTab || 'all';
 
+  /*
+   * =========================
+   * 대시보드에서 들어왔는지
+   * =========================
+   */
+
+  const fromDashboard =
+    location.state?.fromDashboard || false;
 
   /*
    * =========================
@@ -74,7 +92,6 @@ function MeetingMinutesPage() {
       meeting?.minutes || ''
     );
 
-
   /*
    * 회의가 변경되면
    * 입력값도 변경
@@ -85,7 +102,6 @@ function MeetingMinutesPage() {
       meeting?.minutes || ''
     );
   }, [meeting]);
-
 
   /*
    * =========================
@@ -123,7 +139,6 @@ function MeetingMinutesPage() {
     );
   }
 
-
   /*
    * =========================
    * 날짜 / 시간
@@ -154,7 +169,6 @@ function MeetingMinutesPage() {
       }
     );
 
-
   /*
    * =========================
    * 돌아가기
@@ -174,7 +188,6 @@ function MeetingMinutesPage() {
       },
     });
   };
-
 
   /*
    * =========================
@@ -198,7 +211,6 @@ function MeetingMinutesPage() {
       return;
     }
 
-
     /*
      * Context에 저장
      *
@@ -211,16 +223,12 @@ function MeetingMinutesPage() {
       trimmedMinutes
     );
 
-
     /*
      * 저장 완료
      *
      * 전체 회의
      * ↓
      * 지난 회의
-     *
-     * 회의록이 저장되었기 때문에
-     * 지난 회의 탭에서 바로 확인 가능
      */
 
     navigate('/meetings', {
@@ -229,7 +237,6 @@ function MeetingMinutesPage() {
       },
     });
   };
-
 
   return (
     <div className="meeting-minutes-page">
@@ -243,7 +250,9 @@ function MeetingMinutesPage() {
         <h1>
           {isViewMode
             ? '회의록 상세보기'
-            : '회의록 입력'}
+            : fromDashboard && !hasMinutes
+              ? '회의록 상세보기'
+              : '회의록 입력'}
         </h1>
 
       </header>
@@ -285,10 +294,34 @@ function MeetingMinutesPage() {
 
 
         {/* =========================
+            대시보드에서 들어온
+            회의록 미작성 상태
+        ========================= */}
+
+        {fromDashboard &&
+          !hasMinutes && (
+
+          <div className="meeting-minutes-view">
+
+            <p className="meeting-minutes-empty-text">
+              아직 작성된 회의록이 없습니다.
+            </p>
+
+            <p className="meeting-minutes-empty-description">
+              팀장이 회의록을 작성하면 이곳에서 확인할 수 있습니다.
+            </p>
+
+          </div>
+
+        )}
+
+
+        {/* =========================
             회의록 입력
         ========================= */}
 
-        {!isViewMode && (
+        {!isViewMode &&
+          !fromDashboard && (
 
           <div className="meeting-minutes-edit">
 
@@ -339,10 +372,9 @@ function MeetingMinutesPage() {
 
       {/* =========================
           AI 요약
-      =========================
-      
-      상세보기에서만 표시
-      Context에서 summary로 저장됨
+          
+          상세보기에서만 표시
+          Context에서 summary로 저장됨
       ========================= */}
 
       {isViewMode &&
@@ -381,12 +413,14 @@ function MeetingMinutesPage() {
           돌아가기
         </button>
 
+
         {/* =========================
             회의록 저장
             입력 화면에서만 표시
         ========================= */}
 
-        {!isViewMode && (
+        {!isViewMode &&
+          !fromDashboard && (
 
           <button
             type="button"
