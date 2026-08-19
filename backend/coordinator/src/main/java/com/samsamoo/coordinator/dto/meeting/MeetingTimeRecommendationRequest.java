@@ -1,37 +1,38 @@
 package com.samsamoo.coordinator.dto.meeting;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class MeetingTimeRecommendationRequest {
 
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Integer durationMinutes;
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     public MeetingTimeRecommendationRequest() {
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public Integer getDurationMinutes() {
-        return durationMinutes;
+    public LocalTime getStartTime() {
+        return startTime;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public LocalTime getEndTime() {
+        return endTime;
     }
 
-    public void setDurationMinutes(Integer durationMinutes) {
-        this.durationMinutes = durationMinutes;
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 }
