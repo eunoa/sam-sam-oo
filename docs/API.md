@@ -629,13 +629,15 @@ Response Body 없음.
     "meetingId": 1,
     "title": "주간 프로젝트 회의",
     "scheduledAt": "2026-08-12T20:00:00",
-    "status": "FINISHED"
+    "status": "FINISHED",
+    "important": true
   },
   {
     "meetingId": 2,
     "title": "기획 회의",
     "scheduledAt": "2026-08-15T20:00:00",
-    "status": "SCHEDULED"
+    "status": "SCHEDULED",
+    "important": true
   }
 ]
 ```
@@ -648,7 +650,7 @@ Response Body 없음.
 **URL:** `/meetings/{meetingId}`
 **사용자:** 팀원, 팀장
 
-회의의 세부 정보 및 회의록을 조회한다.
+회의의 세부 정보 및 작성된 회의록을 조회한다.
 
 ### Request
 
@@ -664,9 +666,42 @@ Response Body 없음.
   "projectId": 1,
   "title": "주간 프로젝트 회의",
   "scheduledAt": "2026-08-12T20:00:00",
-  "summary": "오늘 회의에서는 로그인 기능과 프로젝트 생성 기능에 대해 논의했다."
+  "status": "FINISHED",
+  "manualContent": "로그인 기능과 프로젝트 생성 기능에 대해 논의했다.",
+  "important": true
 }
 ```
+---
+## 9️⃣ 중요 회의 설정 / 해제
+
+Method: PATCH
+URL: /meetings/{meetingId}/important
+사용자: 팀원, 팀장
+
+특정 회의를 중요한 회의로 설정하거나 해제한다.
+
+important=true인 회의는 중요한 회의 목록에서 별도로 표시할 수 있다.
+
+### Request
+
+```json
+중요 회의로 설정:
+
+{
+  "important": true
+}
+
+중요 회의 해제:
+
+{
+  "important": false
+}
+```
+### Response
+
+200 OK
+
+응답 Body 없음.
 
 ---
 

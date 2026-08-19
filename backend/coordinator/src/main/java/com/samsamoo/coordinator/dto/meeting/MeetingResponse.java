@@ -9,15 +9,18 @@ public class MeetingResponse {
     private String title;
     private LocalDateTime scheduledAt;
     private MeetingStatus status;
+    private boolean important;
 
     public MeetingResponse(Long meetingId,
                            String title,
                            LocalDateTime scheduledAt,
-                           MeetingStatus status) {
+                           MeetingStatus status,
+                           boolean important) {
         this.meetingId = meetingId;
         this.title = title;
         this.scheduledAt = scheduledAt;
         this.status = status;
+        this.important = important;
     }
 
     public Long getMeetingId() {
@@ -34,5 +37,9 @@ public class MeetingResponse {
 
     public MeetingStatus getStatus() {
         return status;
+    }
+
+    public boolean isImportant() {
+        return important;
     }
 }
