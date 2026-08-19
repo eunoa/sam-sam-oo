@@ -13,7 +13,7 @@ function Home() {
     <div className="home-page">
       <header className="home-header">
         <div className="home-brand">
-          <div className="home-logo" />
+          <div className="home-logo"><img src="/workbridge-logo.png" alt="WorkBridge" /></div>
           <span className="home-app-name">앱 이름</span>
         </div>
         <Link to="/login" className="home-auth-link">
@@ -23,7 +23,7 @@ function Home() {
 
       <main className="home-main">
         <p className="home-description">
-          앱 설명 글 앱 설명 글 앱 설명 글 앱 설명 글 앱 설명 글
+          AI가 프로젝트를 이해하고 협업을 도와주는 'AI 프로젝트 코디네이터
         </p>
 
         <button type="button" className="home-start-button" onClick={handleStart}>

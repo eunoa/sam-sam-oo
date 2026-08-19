@@ -1,14 +1,13 @@
 import './MeetingCreatePage.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api/axiosInstance';
 
-import { useMeetings } from '../../context/MeetingContext';
 import { useProjects } from '../../context/ProjectContext';
 
 function MeetingCreatePage() {
   const navigate = useNavigate();
 
-  const { addMeeting } = useMeetings();
   const { projects } = useProjects();
 
   const [title, setTitle] = useState('');
@@ -39,7 +38,7 @@ function MeetingCreatePage() {
      회의 생성
   ========================= */
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!title.trim()) {
@@ -57,27 +56,20 @@ function MeetingCreatePage() {
       return;
     }
 
-    const newMeeting = {
-      meetingId: Date.now(),
+    try {
+      const response = await api.post("/projects/" + projectId + "/meetings", {
+        title: title.trim(),
+        scheduledAt: date + "T" + time + ":00",
+      });
 
-      title: title.trim(),
+      console.log("회의 생성 성공:", response.data);
 
-      scheduledAt:
-        `${date}T${time}:00`,
-
-      projectId,
-      projectName: projects.find((project) => project.projectId === projectId)?.name || '',
-
-      isImportant,
-
-      minutes: '',
-    };
-
-    addMeeting(newMeeting);
-
-    alert('회의가 생성되었습니다.');
-
-    navigate('/meetings');
+      alert("회의가 생성되었습니다.");
+      navigate("/meetings");
+    } catch (error) {
+      console.error("회의 생성 실패:", error);
+      alert("회의 생성 실패: " + (error.response?.data?.message || error.response?.data || error.message));
+    }
   };
 
   return (

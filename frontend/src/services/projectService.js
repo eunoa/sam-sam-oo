@@ -1,12 +1,29 @@
-import { mockProjects } from '../mocks/projectMock';
-import { mockMembersByProject } from '../mocks/memberByProjectMock';
+import { apiClient } from '../api/apiClient';
 
-// TODO: 백엔드 연동 시 GET /projects 호출로 교체
-export function getProjects() {
-  return mockProjects;
+// 내 프로젝트 목록 조회
+export async function getProjects() {
+  return apiClient('/projects');
 }
 
-// TODO: 백엔드 연동 시 GET /projects/{projectId}/members 호출로 교체
-export function getProjectMembers(projectId) {
-  return mockMembersByProject[projectId] ?? [];
+// 프로젝트 생성
+export async function createProject({ name, description }) {
+  return apiClient('/projects', {
+    method: 'POST',
+    body: JSON.stringify({
+      name,
+      description,
+    }),
+  });
+}
+
+// 프로젝트 삭제
+export async function deleteProject(projectId) {
+  return apiClient(`/projects/${projectId}`, {
+    method: 'DELETE',
+  });
+}
+
+// 프로젝트 멤버 조회
+export async function getProjectMembers(projectId) {
+  return apiClient(`/projects/${projectId}/members`);
 }

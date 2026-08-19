@@ -1,23 +1,57 @@
-import { createContext, useContext, useState } from 'react';
-import { mockProjects } from '../mocks/projectMock';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+
+import {
+  getProjects,
+  createProject,
+  deleteProject as deleteProjectApi,
+} from '../services/projectService';
 
 const ProjectContext = createContext(null);
 
 export function ProjectProvider({ children }) {
-  const [projects, setProjects] = useState(
-    mockProjects.map((project) => ({
-      ...project,
-    }))
-  );
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // 프로젝트 목록 조회
+  const loadProjects = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const data = await getProjects();
+
+      setProjects(data);
+    } catch (error) {
+      console.error('프로젝트 목록 조회 실패:', error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
 
   // 프로젝트 추가
-  const addProject = (project) => {
+  const addProject = async ({ name, description }) => {
+    const createdProject = await createProject({
+      name,
+      description,
+    });
+
     setProjects((prevProjects) => [
       ...prevProjects,
-      {
-        ...project,
-      },
+      createdProject,
     ]);
+
+    return createdProject;
   };
 
   // 프로젝트 수정
@@ -35,7 +69,9 @@ export function ProjectProvider({ children }) {
   };
 
   // 프로젝트 삭제
-  const deleteProject = (projectId) => {
+  const deleteProject = async (projectId) => {
+    await deleteProjectApi(projectId);
+
     setProjects((prevProjects) =>
       prevProjects.filter(
         (project) => project.projectId !== projectId
@@ -51,6 +87,9 @@ export function ProjectProvider({ children }) {
         addProject,
         updateProject,
         deleteProject,
+        loadProjects,
+        isLoading,
+        error,
       }}
     >
       {children}

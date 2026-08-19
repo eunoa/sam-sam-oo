@@ -377,7 +377,7 @@ function DashboardPage() {
     return (
       <div className="team-status-content">
 
-        {projects.slice(0, 4).map(
+        {projects.map(
           (project) => {
             const projectMembers =
               getProjectMembers(
@@ -992,7 +992,7 @@ function DashboardPage() {
 
             <div className="project-list">
 
-              {projects.slice(0, 4).map(
+              {projects.map(
                 (project) => (
 
                   <ProjectCard

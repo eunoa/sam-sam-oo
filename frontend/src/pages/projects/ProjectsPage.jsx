@@ -13,6 +13,7 @@ function ProjectsPage() {
   const {
     projects,
     addProject,
+    deleteProject,
   } = useProjects();
 
   const [isCreateModalOpen, setIsCreateModalOpen] =
@@ -21,6 +22,12 @@ function ProjectsPage() {
   const [name, setName] = useState('');
   const [description, setDescription] =
     useState('');
+
+  const [openProjectMenu, setOpenProjectMenu] =
+    useState(null);
+
+  const [deleteProjectTarget, setDeleteProjectTarget] =
+    useState(null);
 
 
   /*
@@ -48,7 +55,36 @@ function ProjectsPage() {
    * =========================
    */
 
-  const handleSubmit = (event) => {
+  const handleProjectMenuClick = (
+    event,
+    project
+  ) => {
+    event.stopPropagation();
+
+    setOpenProjectMenu((prev) =>
+      prev === project.projectId
+        ? null
+        : project.projectId
+    );
+  };
+
+  const handleDeleteProject = (project) => {
+    setDeleteProjectTarget(project);
+    setOpenProjectMenu(null);
+  };
+
+  const handleConfirmDeleteProject = () => {
+    if (!deleteProjectTarget) {
+      return;
+    }
+
+    // ProjectContext에 이미 있는 삭제 함수 사용
+    deleteProject(deleteProjectTarget.projectId);
+
+    setDeleteProjectTarget(null);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const trimmedName = name.trim();
@@ -57,25 +93,16 @@ function ProjectsPage() {
       return;
     }
 
-    const nextProjectId =
-      projects.length > 0
-        ? Math.max(
-            ...projects.map(
-              (project) =>
-                project.projectId
-            )
-          ) + 1
-        : 1;
+    try {
+      await addProject({
+        name: trimmedName,
+        description: description.trim(),
+      });
 
-    const newProject = {
-      projectId: nextProjectId,
-      name: trimmedName,
-      description: description.trim(),
-    };
-
-    addProject(newProject);
-
-    handleCloseCreateModal();
+      handleCloseCreateModal();
+    } catch (error) {
+      console.error('프로젝트 생성 실패:', error);
+    }
   };
 
 
@@ -131,6 +158,16 @@ function ProjectsPage() {
               >
                 <ProjectCard
                   project={project}
+                  onClick={() => {
+                    navigate(
+                      `/projects/${project.projectId}/meetings`
+                    );
+                  }}
+                  onMenuClick={handleProjectMenuClick}
+                  isMenuOpen={
+                    openProjectMenu === project.projectId
+                  }
+                  onDelete={handleDeleteProject}
                 />
               </div>
 
@@ -288,6 +325,56 @@ function ProjectsPage() {
             </form>
 
           </section>
+
+        </div>
+
+      )}
+
+      {deleteProjectTarget && (
+
+        <div className="project-delete-modal-overlay">
+
+          <div
+            className="project-delete-modal"
+            role="dialog"
+            aria-modal="true"
+          >
+
+            <h3 className="project-delete-modal-title">
+              프로젝트 삭제
+            </h3>
+
+            <p className="project-delete-modal-message">
+              &quot;{deleteProjectTarget.name}&quot; 프로젝트를 삭제하시겠습니까?
+            </p>
+
+            <p className="project-delete-modal-warning">
+              삭제한 프로젝트는 되돌릴 수 없습니다.
+            </p>
+
+            <div className="project-delete-modal-actions">
+
+              <button
+                type="button"
+                className="project-delete-modal-cancel"
+                onClick={() =>
+                  setDeleteProjectTarget(null)
+                }
+              >
+                취소
+              </button>
+
+              <button
+                type="button"
+                className="project-delete-modal-confirm"
+                onClick={handleConfirmDeleteProject}
+              >
+                삭제
+              </button>
+
+            </div>
+
+          </div>
 
         </div>
 

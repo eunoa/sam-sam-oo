@@ -4,7 +4,7 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="profile">
-        <div className="profile-image"></div>
+        <div className="profile-image"><img src="/workbridge-logo.png" alt="WorkBridge" /></div>
         <span>프로필</span>
       </div>
 
