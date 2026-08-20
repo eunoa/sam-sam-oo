@@ -12,12 +12,18 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new CurrentUserIdArgumentResolver());
+    public void addArgumentResolvers(
+            List<HandlerMethodArgumentResolver> resolvers
+    ) {
+        resolvers.add(
+                new CurrentUserIdArgumentResolver()
+        );
     }
 
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    public void addCorsMappings(
+            CorsRegistry registry
+    ) {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "http://localhost:5173",
@@ -31,7 +37,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "DELETE",
                         "OPTIONS"
                 )
-                .allowedHeaders("*")
+                .allowedHeaders(
+                        "Authorization",
+                        "Content-Type"
+                )
                 .allowCredentials(true);
     }
 }
