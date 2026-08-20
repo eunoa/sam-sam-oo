@@ -1,0 +1,574 @@
+/* =========================================================
+   MY 업무 (메인화면 3 - TasksPage)
+   대시보드/회의 화면(App.css)과 별도로 관리되는 전용 스타일
+========================================================= */
+
+.taskboard-page {
+  width: 100%;
+  max-width: none;
+}
+
+/* 상단 헤더 */
+
+.taskboard-header {
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid #222;
+}
+
+.taskboard-header h1 {
+  margin: 0;
+
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+/* 탭 + 보기 옵션 툴바 */
+
+.taskboard-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 18px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.taskboard-tabs {
+  display: flex;
+  align-items: center;
+
+  gap: 24px;
+}
+
+.taskboard-tab {
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #888;
+
+  cursor: pointer;
+}
+
+.taskboard-tab.active {
+  color: #111;
+  font-weight: 700;
+}
+
+.taskboard-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.taskboard-view-toggle {
+  display: flex;
+  align-items: center;
+
+  gap: 2px;
+  padding: 3px;
+
+  background: #f0f0f0;
+
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+}
+
+.view-toggle-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 26px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #999;
+
+  cursor: pointer;
+}
+
+.view-toggle-button.active {
+  background: #ffffff;
+
+  color: #222;
+
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* 업무 보드 (칸반 컬럼) */
+
+.taskboard-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 20px;
+
+  margin-top: 24px;
+}
+
+.taskboard-column {
+  min-height: 380px;
+
+  padding: 20px;
+
+  background: #ececec;
+
+  border-radius: 16px;
+}
+
+.taskboard-column-header {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 16px;
+}
+
+.taskboard-column-header h2 {
+  margin: 0;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.taskboard-column-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: #b9b9b9;
+
+  color: #fff;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.taskboard-column-body {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.taskboard-column-empty {
+  margin: 12px 0 0;
+
+  font-size: 12px;
+  color: #999;
+
+  text-align: center;
+}
+
+/* 업무 카드 */
+
+.taskboard-card {
+  padding: 14px 16px;
+
+  background: #fafafa;
+
+  border-radius: 12px;
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.taskboard-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+
+  cursor: pointer;
+}
+
+.taskboard-card-project {
+  margin: 0 0 4px;
+
+  font-size: 10px;
+  color: #9a9a9a;
+}
+
+.taskboard-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 8px;
+}
+
+.taskboard-card-title {
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.taskboard-card-badge {
+  flex-shrink: 0;
+
+  padding: 3px 9px;
+
+  border-radius: 8px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.taskboard-card-badge.badge-todo {
+  background: #fbe2a4;
+  color: #8a6300;
+}
+
+.taskboard-card-badge.badge-in-progress {
+  background: #f6b7bb;
+  color: #9c1f27;
+}
+
+.taskboard-card-badge.badge-done {
+  background: #bfe6c4;
+  color: #276b39;
+}
+
+.taskboard-card-description {
+  margin: 6px 0 0;
+
+  font-size: 11px;
+  line-height: 1.5;
+  color: #888;
+}
+
+.taskboard-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 14px;
+}
+
+.taskboard-card-assignee {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  font-size: 11px;
+  color: #666;
+}
+
+.taskboard-card-avatar {
+  width: 16px;
+  height: 16px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #c4c4c4;
+}
+
+.taskboard-card-date {
+  font-size: 11px;
+  color: #999;
+}
+
+/* 업무 리스트 뷰 (보기 토글 - 리스트) */
+
+.taskboard-list-view {
+  display: flex;
+  flex-direction: column;
+
+  gap: 28px;
+
+  margin-top: 24px;
+}
+
+.taskboard-list-group-header {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 12px;
+}
+
+.taskboard-list-group-header h2 {
+  margin: 0;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.taskboard-list-group-rows {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.task-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  padding: 18px 24px;
+
+  background: #ececec;
+
+  border-radius: 14px;
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.task-row:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+
+  cursor: pointer;
+}
+
+.task-row-left {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  flex-shrink: 0;
+}
+
+.task-row-title {
+  margin: 0;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.task-row-date {
+  margin: 0;
+
+  font-size: 12px;
+  color: #777;
+}
+
+.task-row-project {
+  margin: 0;
+
+  font-size: 10px;
+  color: #aaa;
+}
+
+.task-row-description {
+  margin: 0;
+
+  max-width: 55%;
+
+  font-size: 12px;
+  line-height: 1.5;
+  color: #777;
+
+  text-align: right;
+}
+.taskboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.taskboard-create-button {
+  border: none;
+  border-radius: 18px;
+  padding: 9px 16px;
+  background: #315b96;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.taskboard-create-button:hover {
+  opacity: 0.9;
+}
+
+.taskboard-card-status-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.task-status-button {
+  border: none;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.task-status-start {
+  background: #315b96;
+  color: #ffffff;
+}
+
+.task-status-complete {
+  background: #315b96;
+  color: #ffffff;
+}
+
+.task-status-button:hover {
+  opacity: 0.9;
+}
+
+.task-status-finished {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.task-row-status-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 100px;
+  margin-left: auto;
+}
+
+/* =========================
+   Task 번역
+========================= */
+
+.task-translation-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.task-translation-controls select {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+.task-translate-button {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 11px;
+  background: #315b96;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.task-translate-button:hover {
+  opacity: 0.9;
+}
+
+.task-translate-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.task-translation-result {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f6f7f9;
+  border-radius: 8px;
+}
+
+.task-translation-result p {
+  margin: 0;
+  color: #374151;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+
+/* =========================
+   리스트형 번역
+========================= */
+
+.task-row-description-wrapper {
+  flex: 1;
+}
+
+.task-row-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.task-row-translation-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.task-row-translation-controls select {
+  padding: 7px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+.task-row-translation-result {
+  margin-top: 8px;
+  padding: 10px;
+  background: #f6f7f9;
+  border-radius: 8px;
+}
+
+.task-row-translation-result span {
+  display: block;
+  margin-bottom: 5px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.task-row-translation-result p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.task-translation-label {
+  display: block;
+  margin-bottom: 4px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.task-translation-title {
+  font-weight: 600;
+}

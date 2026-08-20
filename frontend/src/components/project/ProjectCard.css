@@ -1,0 +1,231 @@
+/* =========================================================
+   Project Card
+========================================================= */
+
+.project-card {
+  width: 100%;
+  padding: 18px 20px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+  border: 1px solid #e8e9eb;
+  border-radius: 12px;
+
+  transition:
+    transform 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #d2d4d7;
+
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   Card Top
+========================================================= */
+
+.project-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+
+/* =========================================================
+   Project Name
+========================================================= */
+
+.project-card-name {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   Description
+========================================================= */
+
+.project-card-description {
+  margin: 5px 0 0;
+
+  color: #8b9098;
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   Role
+========================================================= */
+
+.project-card-role {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  min-width: 34px;
+  height: 22px;
+  padding: 0 8px;
+
+  box-sizing: border-box;
+
+  border-radius: 6px;
+
+  background: #f1f2f4;
+  color: #666a70;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   Project Card Actions
+========================================================= */
+
+.project-card-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   Project Card Menu
+========================================================= */
+
+.project-card-menu-wrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+
+.project-card-menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #777c83;
+
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.project-card-menu-button:hover {
+  background: #f1f2f4;
+  color: #33373c;
+}
+
+
+/* =========================================================
+   Project Card Menu Dropdown
+========================================================= */
+
+.project-card-menu {
+  position: absolute;
+
+  top: calc(100% + 6px);
+  right: 0;
+
+  z-index: 30;
+
+  min-width: 120px;
+
+  padding: 5px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e1e2e5;
+  border-radius: 10px;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.project-card-menu-item {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-height: 34px;
+
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #44484e;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.project-card-menu-item.project-card-delete-item {
+  color: #c04a4a;
+}
+
+.project-card-menu-item:hover {
+  background: #fff1f1;
+  color: #b33131;
+}
+
+.project-card .team-project-menu {
+  min-width: 0;
+  width: max-content;
+}
+
+.project-card .team-project-menu-item {
+  width: max-content;
+  white-space: nowrap;
+}
+
