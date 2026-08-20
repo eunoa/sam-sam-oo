@@ -27,7 +27,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "http://localhost:5173",
-                        "http://localhost:5174"
+                        "http://localhost:5174",
+			"http://1.201.117.72",
+			"https://workbridge.1-201-117-72.sslip.io"
                 )
                 .allowedMethods(
                         "GET",
