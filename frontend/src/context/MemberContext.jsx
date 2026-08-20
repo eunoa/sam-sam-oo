@@ -1,61 +1,101 @@
-import { createContext, useContext, useState } from 'react';
-import { mockMembers } from '../mocks/memberMock';
+import { createContext, useContext, useEffect, useState } from 'react';
+
+import { useProjects } from './ProjectContext';
+
+import {
+  getProjectMembers,
+  inviteMember,
+  deleteMember as deleteMemberApi,
+} from '../services/memberService';
 
 const MemberContext = createContext(null);
 
+const normalizeMember = (projectId, member) => ({
+  ...member,
+  projectId,
+  memberId: member.userId,
+  userId: member.userId,
+  profileImage: member.profileImage || '',
+  activeTasks: member.activeTasks || 0,
+});
+
 export function MemberProvider({ children }) {
-  const [members, setMembers] = useState(
-    mockMembers.map((member) => ({
-      ...member,
-    }))
-  );
+  const { projects } = useProjects();
 
-  // 팀원 추가
-  const addMember = (member) => {
-    setMembers((prevMembers) => [
-      ...prevMembers,
-      {
-        ...member,
-      },
-    ]);
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchMembers = async () => {
+    if (!projects || projects.length === 0) {
+      setMembers([]);
+      return [];
+    }
+
+    try {
+      setLoading(true);
+
+      const results = await Promise.all(
+        projects.map(async (project) => {
+          const data = await getProjectMembers(project.projectId);
+
+          return (data || []).map((member) =>
+            normalizeMember(project.projectId, member)
+          );
+        })
+      );
+
+      const allMembers = results.flat();
+
+      setMembers(allMembers);
+
+      return allMembers;
+    } catch (error) {
+      console.error('팀원 목록 로드 실패:', error);
+      return [];
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // 팀원 수정
-  const updateMember = (projectId, memberId, updatedMember) => {
-    setMembers((prevMembers) =>
-      prevMembers.map((member) =>
-        member.projectId === projectId &&
-        member.memberId === memberId
-          ? {
-              ...member,
-              ...updatedMember,
-            }
-          : member
-      )
-    );
+  const addMember = async (projectId, email) => {
+    const newMember = await inviteMember(projectId, {
+      email,
+    });
+
+    await fetchMembers();
+
+    return newMember;
   };
 
-  // 팀원 삭제
-  const deleteMember = (projectId, memberId) => {
+  const deleteMember = async (projectId, userId) => {
+    await deleteMemberApi(projectId, userId);
+
     setMembers((prevMembers) =>
       prevMembers.filter(
         (member) =>
           !(
-            member.projectId === projectId &&
-            member.memberId === memberId
+            String(member.projectId) === String(projectId) &&
+            String(member.userId) === String(userId)
           )
       )
     );
   };
+
+  useEffect(() => {
+    if (projects.length > 0) {
+      fetchMembers();
+    }
+  }, [projects]);
 
   return (
     <MemberContext.Provider
       value={{
         members,
         setMembers,
+        fetchMembers,
         addMember,
-        updateMember,
         deleteMember,
+        loading,
       }}
     >
       {children}

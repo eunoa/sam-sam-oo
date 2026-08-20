@@ -1,42 +1,29 @@
-/* =========================================================
-   Meeting Card
-========================================================= */
-
 .meeting-card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
   width: 100%;
   padding: 18px 20px;
-
   box-sizing: border-box;
-
   border: 1px solid #e8e9eb;
   border-radius: 12px;
-
   background: #fff;
-
+  cursor: pointer;
   transition:
+    transform 0.15s ease,
     border-color 0.15s ease,
     box-shadow 0.15s ease;
 }
 
 .meeting-card:hover {
-  border-color: #d4d5d8;
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+  border-color: #d2d4d7;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
 }
 
-
-/* Card Top */
-
-.meeting-card-top {
+.meeting-card-main {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-
-  gap: 16px;
+  gap: 20px;
+  width: 100%;
 }
 
 .meeting-card-info {
@@ -44,93 +31,91 @@
   flex: 1;
 }
 
-
-/* Project */
-
 .meeting-card-project {
   margin: 0 0 6px;
-
   color: #8b9098;
-
   font-size: 12px;
   font-weight: 500;
 }
 
-
-/* Title */
-
 .meeting-card-title {
   margin: 0;
-
   overflow: hidden;
-
   color: #222;
-
   font-size: 15px;
   font-weight: 700;
   line-height: 1.4;
-
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
-
-/* Date */
 
 .meeting-card-date {
   margin: 7px 0 0;
-
   color: #92969d;
-
   font-size: 12px;
   line-height: 1.5;
 }
 
-
-/* Summary */
-
 .meeting-card-summary {
   margin: 10px 0 0;
-  padding-top: 10px;
-
-  border-top: 1px solid #f0f1f3;
-
   overflow: hidden;
-
   color: #777c83;
-
   font-size: 12px;
   line-height: 1.5;
-
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
+.meeting-card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 4px;
+}
 
-/* Important */
+.meeting-minutes-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0 13px;
+  box-sizing: border-box;
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+  background: #fff;
+  color: #555960;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.meeting-minutes-button:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #222;
+}
 
 .meeting-important-button {
   display: flex;
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
-
   width: 28px;
   height: 28px;
-
   padding: 0;
-
   border: 0;
-
   background: transparent;
   color: #b0b3b8;
-
   font-size: 19px;
   line-height: 1;
-
   cursor: pointer;
-
   transition:
     color 0.15s ease,
     transform 0.15s ease;
@@ -145,51 +130,14 @@
   color: #f2c94c;
 }
 
-
-/* Actions */
-
-.meeting-card-actions {
-  display: flex;
-  justify-content: flex-end;
-
-  padding-top: 10px;
-
-  border-top: 1px solid #f0f1f3;
-}
-
-
-/* Meeting Minutes Button */
-
-.meeting-minutes-button {
-  height: 36px;
-
-  padding: 0 14px;
-
-  border: 1px solid #dedfe2;
-  border-radius: 7px;
-
-  background: #fff;
-  color: #555960;
-
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-
-  cursor: pointer;
-}
-
-.meeting-minutes-button:hover {
-  background: #f7f7f8;
-  border-color: #cfd1d5;
-  color: #222;
-}
-
-
-/* Responsive */
-
 @media (max-width: 560px) {
   .meeting-card {
     padding: 16px;
+  }
+
+  .meeting-card-main {
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .meeting-card-title {
@@ -197,6 +145,12 @@
   }
 
   .meeting-card-actions {
-    justify-content: flex-end;
+    gap: 5px;
+  }
+
+  .meeting-minutes-button {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 10px;
   }
 }

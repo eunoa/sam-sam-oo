@@ -1,0 +1,685 @@
+.settings-page {
+  width: 100%;
+}
+
+
+/* =========================================================
+   Header
+========================================================= */
+
+.settings-page-header {
+  padding-bottom: 18px;
+  margin-bottom: 24px;
+
+  border-bottom: 1px solid #222;
+}
+
+.settings-page-header h1 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+
+/* =========================================================
+   Body Layout
+========================================================= */
+
+.settings-page-body {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 24px;
+}
+
+
+/* =========================================================
+   Left Nav
+========================================================= */
+
+.settings-page-nav {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  width: 150px;
+  flex-shrink: 0;
+
+  padding-top: 4px;
+}
+
+.settings-page-nav-item {
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #9a9ea5;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.settings-page-nav-item:hover {
+  color: #555;
+}
+
+.settings-page-nav-item.active {
+  color: #222;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Content / Section
+========================================================= */
+
+.settings-page-content {
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-page-section {
+  padding: 22px 24px;
+
+  box-sizing: border-box;
+
+  background: #f8f8f9;
+
+  border: 1px solid #e2e3e5;
+  border-radius: 14px;
+}
+
+.settings-page-section h2 {
+  margin: 0 0 18px;
+
+  color: #222;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Profile Form
+========================================================= */
+
+.settings-page-form-body {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 24px;
+}
+
+
+/* =========================================================
+   Avatar
+========================================================= */
+
+.settings-page-avatar-col {
+  flex-shrink: 0;
+}
+
+.settings-page-avatar {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 76px;
+  height: 76px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #d4d4d4;
+
+  overflow: visible;
+
+  cursor: pointer;
+}
+
+.settings-page-avatar img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+}
+
+.settings-page-avatar-placeholder {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: 50%;
+
+  background: #cfcfcf;
+}
+
+.settings-page-avatar-badge {
+  position: absolute;
+
+  right: -2px;
+  bottom: -2px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 22px;
+  height: 22px;
+
+  border-radius: 50%;
+  border: 2px solid #f8f8f9;
+
+  background: #e79a4b;
+  color: #fff;
+
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.settings-page-avatar-input {
+  display: none;
+}
+
+
+/* =========================================================
+   Fields
+========================================================= */
+
+.settings-page-fields {
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-page-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.settings-page-field label {
+  color: #777c83;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.settings-page-field input {
+  height: 36px;
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+
+  background: #fff;
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  transition: border-color 0.15s ease;
+}
+
+.settings-page-field input:focus {
+  border-color: #b7b9bd;
+}
+
+.settings-page-field input:disabled {
+  background: #f1f2f4;
+  color: #9a9ea5;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   Save Row
+========================================================= */
+
+.settings-page-save-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.settings-page-save-message {
+  color: #6b8f6f;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.settings-page-save-button,
+.settings-page-confirm-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 34px;
+  padding: 0 16px;
+
+  box-sizing: border-box;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #e79a4b;
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.15s ease;
+}
+
+.settings-page-save-button:hover,
+.settings-page-confirm-button:hover {
+  background: #d98a3a;
+}
+
+
+/* =========================================================
+   Language Row
+========================================================= */
+
+.settings-page-language-row {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.settings-page-language-row label {
+  color: #777c83;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.settings-page-language-controls {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.settings-page-language-controls select {
+  height: 36px;
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+
+  background: #fff;
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  min-width: 220px;
+}
+
+
+/* =========================================================
+   Logout
+========================================================= */
+
+.settings-page-logout-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.settings-page-logout-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 34px;
+  padding: 0 18px;
+
+  box-sizing: border-box;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #e05a4e;
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: background 0.15s ease;
+}
+
+.settings-page-logout-button:hover {
+  background: #cc4b40;
+}
+
+
+/* =========================================================
+   Availability - Toolbar
+========================================================= */
+
+.availability-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+.availability-day-select {
+  height: 34px;
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+
+  background: #fff;
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.availability-time-button {
+  height: 34px;
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+
+  background: #fff;
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.availability-time-button:hover {
+  border-color: #cfd1d5;
+}
+
+.availability-time-button.active {
+  border-color: #e79a4b;
+  background: #fdf2e6;
+}
+
+
+/* =========================================================
+   Time Picker
+========================================================= */
+
+.time-picker {
+  width: 260px;
+  margin-top: 14px;
+
+  padding: 14px 16px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e2e3e5;
+  border-radius: 12px;
+
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.time-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 12px;
+
+  color: #33373c;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.time-picker-close {
+  border: none;
+  background: transparent;
+
+  color: #9a9ea5;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.time-picker-close:hover {
+  color: #555;
+}
+
+.time-picker-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+}
+
+.time-picker-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.time-picker-column button {
+  width: 26px;
+  height: 20px;
+
+  border: none;
+  background: transparent;
+
+  color: #9a9ea5;
+
+  font-size: 11px;
+
+  cursor: pointer;
+}
+
+.time-picker-column button:hover {
+  color: #33373c;
+}
+
+.time-picker-column span {
+  min-width: 28px;
+
+  color: #222;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.time-picker-colon {
+  color: #222;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Availability List
+========================================================= */
+
+.availability-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin-top: 18px;
+}
+
+.availability-item {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 12px 14px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e1e2e4;
+  border-radius: 10px;
+}
+
+.availability-item-day {
+  min-width: 20px;
+
+  color: #33373c;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.availability-item-time {
+  flex: 1;
+
+  color: #555a61;
+
+  font-size: 12px;
+}
+
+.availability-delete-button {
+  flex-shrink: 0;
+
+  height: 28px;
+  padding: 0 12px;
+
+  border: none;
+  border-radius: 14px;
+
+  background: #e79a4b;
+  color: #fff;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background 0.15s ease;
+}
+
+.availability-delete-button:hover {
+  background: #d98a3a;
+}
+
+
+/* =========================================================
+   Notice
+========================================================= */
+
+.settings-page-notice {
+  margin: 0;
+
+  color: #9a9ea5;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 700px) {
+  .settings-page-body {
+    flex-direction: column;
+  }
+
+  .settings-page-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    width: 100%;
+
+    gap: 16px;
+  }
+
+  .settings-page-form-body {
+    flex-direction: column;
+  }
+
+  .settings-page-language-controls {
+    flex-wrap: wrap;
+  }
+
+  .settings-page-language-controls select {
+    min-width: 0;
+
+    flex: 1;
+  }
+}

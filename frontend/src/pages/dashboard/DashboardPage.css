@@ -393,6 +393,323 @@
 
 
 /* =========================================================
+   Team Project Menu
+========================================================= */
+
+.team-project-menu-wrapper {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+
+/* 프로젝트 관리 버튼 */
+
+.team-project-menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 3px;
+
+  width: 30px;
+  height: 30px;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+  border: 1px solid transparent;
+  border-radius: 50%;
+
+  background: transparent;
+  color: #777c83;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.team-project-menu-button:hover {
+  background: #f1f2f4;
+  border-color: #dedfe2;
+  color: #33373c;
+}
+
+.team-project-menu-button:active {
+  background: #e7e8ea;
+}
+
+
+/* 점 3개 */
+
+.team-project-menu-button span {
+  display: block;
+
+  width: 3px;
+  height: 3px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+}
+
+
+/* 프로젝트 관리 드롭다운 */
+
+.team-project-menu-dropdown {
+  position: absolute;
+
+  top: calc(100% + 6px);
+  right: 0;
+
+  z-index: 30;
+
+  width: 140px;
+
+  padding: 5px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e1e2e5;
+  border-radius: 10px;
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.08);
+
+  animation: project-menu-show 0.12s ease-out;
+}
+
+
+/* 메뉴 등장 */
+
+@keyframes project-menu-show {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* 메뉴 항목 */
+
+.team-project-menu-item {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-height: 34px;
+
+  padding: 0 10px;
+
+  box-sizing: border-box;
+
+  border: 0;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #44484e;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.team-project-menu-item:hover {
+  background: #f5f5f6;
+  color: #222;
+}
+
+
+/* 프로젝트 삭제 */
+
+.team-project-menu-item.team-project-delete-item {
+  color: #c04a4a;
+}
+
+.team-project-menu-item.team-project-delete-item:hover {
+  background: #fff1f1;
+  color: #b33131;
+}
+
+
+/* =========================================================
+   Team Member Remove Mode
+========================================================= */
+
+.team-member-remove-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 12px;
+
+  padding: 12px 14px;
+
+  box-sizing: border-box;
+
+  background: #f7f7f8;
+
+  border: 1px solid #dedfe2;
+  border-radius: 10px;
+}
+
+.team-member-remove-notice > div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+
+  min-width: 0;
+}
+
+.team-member-remove-notice strong {
+  color: #33373c;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.team-member-remove-notice span {
+  color: #777c83;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+
+/* 제외 모드 취소 버튼 */
+
+.team-member-remove-notice button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  height: 28px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d7d8db;
+  border-radius: 14px;
+
+  background: #fff;
+  color: #666a70;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.team-member-remove-notice button:hover {
+  background: #f1f2f4;
+  border-color: #cfd1d5;
+  color: #33373c;
+}
+
+
+/* =========================================================
+   Remove Member Mode - Team Member Card
+========================================================= */
+
+.team-member-card.is-remove-member-mode {
+  cursor: pointer;
+
+  border-color: #d9dadc;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+/* 제외 가능한 팀원 */
+
+.team-member-card.is-remove-member-mode:not(.is-project-leader):hover {
+  background: #fafafa;
+
+  border-color: #c9cbcf;
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.05);
+
+  transform: translateY(-1px);
+}
+
+
+/* 팀장은 제외 불가 */
+
+.team-member-card.is-remove-member-mode.is-project-leader {
+  cursor: not-allowed;
+
+  background: #f4f4f5;
+
+  border-color: #e1e2e4;
+
+  opacity: 0.72;
+
+  transform: none;
+}
+
+.team-member-card.is-remove-member-mode.is-project-leader:hover {
+  background: #f4f4f5;
+
+  border-color: #e1e2e4;
+
+  box-shadow: none;
+
+  transform: none;
+}
+
+
+/* 제외 모드에서는 업무 상세 선택 느낌 제거 */
+
+.team-member-card.is-remove-member-mode.is-selected {
+  border-color: #d9dadc;
+
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+
+/* =========================================================
    Team Member List
 ========================================================= */
 
@@ -444,10 +761,14 @@
 }
 
 .team-member-card:hover {
-  background: #f8f8f9;
-  border-color: #d5d7da;
+  background: #fff;
+  border-color: #d2d4d7;
 
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+
+  cursor: pointer;
 }
 
 .team-member-card.is-selected {
@@ -1066,10 +1387,11 @@
 
 .task-card:hover {
   background: #fff;
+  border-color: #d2d4d7;
 
-  border-color: #d8dade;
+  transform: translateY(-2px);
 
-  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
 }
 
 
@@ -1340,6 +1662,15 @@
 
   border: 1px solid #e7e8ea;
   border-radius: 9px;
+}
+
+.task-meeting-card:hover {
+  background: #fff;
+  border-color: #d2d4d7;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
 }
 
 
@@ -1684,6 +2015,18 @@
     gap: 6px;
   }
 
+  /* Team Project Menu */
+
+  .team-project-menu-dropdown {
+    width: 132px;
+  }
+
+  .team-project-menu-item {
+    min-height: 36px;
+
+    font-size: 11px;
+  }
+
   /* Task Settings */
 
   .task-project-section {
@@ -1725,5 +2068,1237 @@
   .task-add-button,
   .task-view-all-button {
     width: 100%;
+  }
+}
+
+
+/* =========================================================
+   Project Delete Modal
+========================================================= */
+
+.project-delete-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.project-delete-modal {
+  width: min(360px, 100%);
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e4e5e7;
+  border-radius: 14px;
+
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.16);
+}
+
+.project-delete-modal-title {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.project-delete-modal-message {
+  margin: 16px 0 0;
+
+  color: #33373c;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  line-height: 1.5;
+}
+
+.project-delete-modal-warning {
+  margin: 6px 0 0;
+
+  color: #9a9da2;
+
+  font-size: 11px;
+  font-weight: 400;
+
+  line-height: 1.5;
+}
+
+.project-delete-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-top: 22px;
+}
+
+.project-delete-modal-actions button {
+  min-width: 64px;
+  height: 34px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.project-delete-modal-cancel {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+  color: #666a70;
+}
+
+.project-delete-modal-cancel:hover {
+  background: #f5f5f6;
+}
+
+.project-delete-modal-confirm {
+  border: 1px solid #c04a4a;
+
+  background: #c04a4a;
+  color: #fff;
+}
+
+.project-delete-modal-confirm:hover {
+  background: #b33131;
+  border-color: #b33131;
+}
+
+
+/* =========================================================
+   Project Create Modal
+========================================================= */
+
+.dashboard-project-create-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: rgba(0, 0, 0, 0.35);
+}
+
+
+/* Modal */
+
+.dashboard-project-create-modal {
+  width: min(460px, 100%);
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #e4e5e7;
+  border-radius: 14px;
+
+  background: #fff;
+
+  box-shadow:
+    0 18px 45px rgba(0, 0, 0, 0.16);
+}
+
+
+/* Header */
+
+.dashboard-project-create-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 24px;
+}
+
+.dashboard-project-create-header h2 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.dashboard-project-create-header p {
+  margin: 6px 0 0;
+
+  color: #8b9098;
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+
+/* Close */
+
+.dashboard-project-create-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 6px;
+
+  background: transparent;
+  color: #8b9098;
+
+  font-family: Arial, sans-serif;
+  font-size: 23px;
+  font-weight: 300;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.dashboard-project-create-close:hover {
+  background: #f3f4f5;
+  color: #222;
+}
+
+
+/* Form */
+
+.dashboard-project-create-form {
+  width: 100%;
+}
+
+
+/* Field */
+
+.dashboard-project-create-field {
+  width: 100%;
+
+  margin-bottom: 18px;
+}
+
+.dashboard-project-create-field:last-of-type {
+  margin-bottom: 0;
+}
+
+.dashboard-project-create-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #33373c;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.dashboard-project-create-field label span {
+  margin-left: 3px;
+
+  color: #d94b4b;
+}
+
+
+/* Input / Textarea */
+
+.dashboard-project-create-field input,
+.dashboard-project-create-field textarea {
+  width: 100%;
+
+  padding: 10px 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+
+  background: #fff;
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.dashboard-project-create-field input {
+  height: 38px;
+}
+
+.dashboard-project-create-field textarea {
+  min-height: 110px;
+
+  resize: vertical;
+
+  line-height: 1.5;
+}
+
+.dashboard-project-create-field input::placeholder,
+.dashboard-project-create-field textarea::placeholder {
+  color: #b0b3b8;
+}
+
+.dashboard-project-create-field input:focus,
+.dashboard-project-create-field textarea:focus {
+  border-color: #bfc2c7;
+
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.04);
+}
+
+
+/* Actions */
+
+.dashboard-project-create-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-top: 24px;
+}
+
+.dashboard-project-create-cancel,
+.dashboard-project-create-submit {
+  height: 36px;
+
+  padding: 0 14px;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.dashboard-project-create-cancel {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+  color: #777c83;
+}
+
+.dashboard-project-create-cancel:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #33373c;
+}
+
+.dashboard-project-create-submit {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+  color: #44484e;
+}
+
+.dashboard-project-create-submit:hover {
+  background: #f7f7f8;
+  border-color: #cfd1d5;
+  color: #222;
+}
+
+
+/* =========================================================
+   Project Create Error
+========================================================= */
+
+.project-create-modal-error {
+  margin: 6px 0 0;
+
+  color: #d94b4b;
+
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* =========================
+   프로젝트 팀원 초대 모달
+   ========================= */
+
+.project-invite-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.project-invite-modal {
+  width: min(420px, 100%);
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e4e5e7;
+  border-radius: 14px;
+
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.16);
+}
+
+.project-invite-modal-header {
+  display: flex;
+
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.project-invite-modal-header h3 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.project-invite-modal-header p {
+  margin: 6px 0 0;
+
+  color: #8b8e93;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  line-height: 1.5;
+}
+
+.project-invite-modal-close {
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: #8b8e93;
+
+  font-size: 22px;
+  font-weight: 400;
+
+  line-height: 28px;
+
+  cursor: pointer;
+}
+
+.project-invite-modal-close:hover {
+  color: #33373c;
+}
+
+.project-invite-modal-form {
+  margin-top: 24px;
+}
+
+.project-invite-modal-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.project-invite-modal-field label {
+  color: #33373c;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  line-height: 1.4;
+}
+
+.project-invite-modal-field label span {
+  margin-left: 3px;
+
+  color: #e05252;
+}
+
+.project-invite-modal-field input {
+  width: 100%;
+  height: 42px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dcdfe3;
+  border-radius: 7px;
+
+  background: #fff;
+
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  outline: none;
+}
+
+.project-invite-modal-field input::placeholder {
+  color: #b0b3b7;
+}
+
+.project-invite-modal-field input:focus {
+  border-color: #8c8f94;
+}
+
+.project-invite-modal-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-top: 22px;
+}
+
+.project-invite-modal-actions button {
+  min-width: 64px;
+  height: 34px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.project-invite-modal-cancel {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+
+  color: #555a60;
+}
+
+.project-invite-modal-cancel:hover {
+  background: #f7f7f8;
+}
+
+.project-invite-modal-submit {
+  border: 1px solid #33373c;
+
+  background: #33373c;
+
+  color: #fff;
+}
+
+.project-invite-modal-submit:hover {
+  background: #22262a;
+}
+
+/* =========================
+   팀원 초대 모달
+   ========================= */
+
+.team-invite-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 1100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.team-invite-modal {
+  width: min(420px, 100%);
+
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  background: #fff;
+
+  border: 1px solid #e4e5e7;
+  border-radius: 14px;
+
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.16);
+}
+
+.team-invite-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.team-invite-modal-header h2 {
+  margin: 0;
+
+  color: #222;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.team-invite-modal-header p {
+  margin: 6px 0 0;
+
+  color: #8a8d92;
+
+  font-size: 12px;
+  font-weight: 400;
+
+  line-height: 1.5;
+}
+
+.team-invite-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: 0;
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: #8a8d92;
+
+  font-size: 22px;
+  font-weight: 400;
+
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+.team-invite-modal-close:hover {
+  background: #f5f5f6;
+
+  color: #33373c;
+}
+
+.team-invite-modal-form {
+  margin-top: 24px;
+}
+
+.team-invite-modal-field {
+  margin-top: 16px;
+}
+
+.team-invite-modal-field:first-child {
+  margin-top: 0;
+}
+
+.team-invite-modal-field label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #33373c;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.team-invite-modal-field label span {
+  margin-left: 3px;
+
+  color: #e25555;
+}
+
+.team-invite-modal-field input {
+  width: 100%;
+  height: 40px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dedfe2;
+  border-radius: 7px;
+
+  outline: none;
+
+  color: #33373c;
+
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.team-invite-modal-field input::placeholder {
+  color: #b1b3b7;
+}
+
+.team-invite-modal-field input:focus {
+  border-color: #aeb1b6;
+
+  box-shadow:
+    0 0 0 2px rgba(0, 0, 0, 0.04);
+}
+
+.team-invite-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 8px;
+
+  margin-top: 24px;
+}
+
+.team-invite-modal-actions button {
+  min-width: 64px;
+  height: 34px;
+
+  padding: 0 12px;
+
+  box-sizing: border-box;
+
+  border-radius: 7px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.team-invite-modal-cancel {
+  border: 1px solid #dedfe2;
+
+  background: #fff;
+
+  color: #55595f;
+}
+
+.team-invite-modal-cancel:hover {
+  background: #f7f7f8;
+}
+
+.team-invite-modal-submit {
+  border: 1px solid #222;
+
+  background: #222;
+
+  color: #fff;
+}
+
+.team-invite-modal-submit:hover {
+  background: #333;
+}
+
+/* =========================================================
+   인원 초대 모달
+   ========================================================= */
+
+.team-invite-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(20, 22, 26, 0.45);
+  backdrop-filter: blur(3px);
+}
+
+.team-invite-modal {
+  width: min(460px, 100%);
+
+  background: #ffffff;
+  border: 1px solid #e5e6e9;
+  border-radius: 18px;
+
+  box-shadow:
+    0 20px 50px rgba(25, 28, 32, 0.16),
+    0 4px 14px rgba(25, 28, 32, 0.08);
+
+  overflow: hidden;
+
+  animation: teamInviteModalOpen 0.18s ease-out;
+}
+
+@keyframes teamInviteModalOpen {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* 헤더 */
+
+.team-invite-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  padding: 26px 28px 20px;
+
+  border-bottom: 1px solid #f0f1f3;
+}
+
+.team-invite-modal-header h2 {
+  margin: 0;
+
+  font-family:
+    'Sandoll GothicNeo1',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    Arial,
+    sans-serif;
+
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #202328;
+}
+
+.team-invite-modal-header p {
+  margin: 7px 0 0;
+
+  font-family:
+    'Sandoll GothicNeo1',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    Arial,
+    sans-serif;
+
+  font-size: 13px;
+  line-height: 1.5;
+  color: #858990;
+}
+
+.team-invite-modal-close {
+  flex: 0 0 auto;
+
+  width: 34px;
+  height: 34px;
+
+  margin: -4px -4px 0 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: #8b8f96;
+
+  font-size: 25px;
+  font-weight: 300;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.team-invite-modal-close:hover {
+  background: #f4f5f6;
+  color: #30343a;
+}
+
+
+/* 폼 */
+
+.team-invite-modal-form {
+  padding: 26px 28px 28px;
+}
+
+.team-invite-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.team-invite-modal-field label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  font-family:
+    'Sandoll GothicNeo1',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    Arial,
+    sans-serif;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #30343a;
+}
+
+.team-invite-modal-field label span {
+  color: #e24d4d;
+}
+
+.team-invite-modal-field input {
+  width: 100%;
+  height: 46px;
+
+  box-sizing: border-box;
+
+  padding: 0 14px;
+
+  border: 1px solid #d9dbe0;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  font-family:
+    'Sandoll GothicNeo1',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    Arial,
+    sans-serif;
+
+  font-size: 14px;
+  color: #25282d;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.team-invite-modal-field input::placeholder {
+  color: #b1b4ba;
+}
+
+.team-invite-modal-field input:hover {
+  border-color: #c5c8ce;
+}
+
+.team-invite-modal-field input:focus {
+  border-color: #4b5058;
+
+  box-shadow:
+    0 0 0 3px rgba(75, 80, 88, 0.08);
+}
+
+
+/* 버튼 */
+
+.team-invite-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 9px;
+
+  margin-top: 26px;
+}
+
+.team-invite-modal-cancel,
+.team-invite-modal-submit {
+  height: 42px;
+
+  padding: 0 18px;
+
+  border-radius: 8px;
+
+  font-family:
+    'Sandoll GothicNeo1',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    Arial,
+    sans-serif;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.team-invite-modal-cancel {
+  border: 1px solid #dedfe3;
+  background: #ffffff;
+  color: #60646b;
+}
+
+.team-invite-modal-cancel:hover {
+  background: #f7f7f8;
+  border-color: #d2d4d8;
+}
+
+.team-invite-modal-submit {
+  border: 1px solid #292d33;
+  background: #292d33;
+  color: #ffffff;
+}
+
+.team-invite-modal-submit:hover {
+  background: #1f2227;
+  border-color: #1f2227;
+}
+
+.team-invite-modal-submit:active,
+.team-invite-modal-cancel:active {
+  transform: translateY(1px);
+}
+
+
+/* =========================================================
+   알림 모달
+   ========================================================= */
+
+.member-alert-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(20, 22, 26, 0.42);
+  backdrop-filter: blur(2px);
+}
+
+.member-alert-modal {
+  width: min(390px, 100%);
+
+  box-sizing: border-box;
+
+  padding: 28px 28px 24px;
+
+  background: #ffffff;
+  border: 1px solid #e5e6e9;
+  border-radius: 16px;
+
+  box-shadow:
+    0 18px 45px rgba(25, 28, 32, 0.16),
+    0 4px 12px rgba(25, 28, 32, 0.07);
+
+  animation: memberAlertModalOpen 0.16s ease-out;
+}
+
+@keyframes memberAlertModalOpen {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.member-alert-modal-title {
+  margin: 0;
+
+  font-family:
+    'Sandoll GothicNeo1',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    Arial,
+    sans-serif;
+
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: #202328;
+}
+
+.member-alert-modal-message {
+  margin: 10px 0 0;
+
+  font-family:
+    'Sandoll GothicNeo1',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    Arial,
+    sans-serif;
+
+  font-size: 14px;
+  line-height: 1.65;
+  color: #686c73;
+
+  word-break: keep-all;
+}
+
+.member-alert-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 24px;
+}
+
+.member-alert-modal-confirm {
+  min-width: 72px;
+  height: 40px;
+
+  padding: 0 17px;
+
+  border: 1px solid #292d33;
+  border-radius: 8px;
+
+  background: #292d33;
+  color: #ffffff;
+
+  font-family:
+    'Sandoll GothicNeo1',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    Arial,
+    sans-serif;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.member-alert-modal-confirm:hover {
+  background: #1f2227;
+  border-color: #1f2227;
+}
+
+
+/* =========================================================
+   모바일
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .team-invite-modal-overlay,
+  .member-alert-modal-overlay {
+    padding: 16px;
+  }
+
+  .team-invite-modal-header {
+    padding: 22px 20px 18px;
+  }
+
+  .team-invite-modal-form {
+    padding: 22px 20px 22px;
+  }
+
+  .team-invite-modal-header h2 {
+    font-size: 19px;
+  }
+
+  .member-alert-modal {
+    padding: 24px 20px 20px;
   }
 }

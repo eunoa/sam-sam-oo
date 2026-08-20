@@ -1,0 +1,96 @@
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 40px;
+}
+
+.home-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.home-logo {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-app-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #222;
+}
+
+.home-auth-link {
+  font-size: 15px;
+  color: #222;
+  text-decoration: none;
+}
+
+.home-auth-link:hover {
+  text-decoration: underline;
+}
+
+.home-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  padding: 40px 24px 160px;
+}
+
+.home-description {
+  max-width: 520px;
+  text-align: center;
+  font-size: 20px;
+  color: #2255cc;
+  text-decoration: underline;
+  margin: 0;
+}
+
+.home-start-button {
+  padding: 20px 64px;
+  border: none;
+  border-radius: 8px;
+  background: #d9d9d9;
+  color: #222;
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.home-start-button:hover {
+  background: #cfcfcf;
+}
+
+.home-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

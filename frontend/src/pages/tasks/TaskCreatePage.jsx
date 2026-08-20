@@ -1,7 +1,7 @@
 import './TaskCreatePage.css';
 
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { useTasks } from '../../context/TaskContext';
 import { useProjects } from '../../context/ProjectContext';
@@ -9,212 +9,411 @@ import { useMembers } from '../../context/MemberContext';
 
 function TaskCreatePage() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const { addTask } = useTasks();
-  const { projects } = useProjects();
+
+  const {
+    projects,
+    currentProject,
+    setCurrentProject,
+  } = useProjects();
+
   const { members } = useMembers();
 
-  const searchParams = new URLSearchParams(location.search);
-const projectId = Number(searchParams.get('projectId'));
-const meetingId = searchParams.get('meetingId');
+  /*
+   * 내가 LEADER인 프로젝트만
+   * 직접 업무 생성 가능
+   */
+  const leaderProjects =
+      projects.filter(
+          (project) =>
+              project.role === 'LEADER'
+      );
 
-  const project = projects.find(
-    (item) => item.projectId === projectId
-  );
+  /*
+   * 현재 프로젝트가 LEADER라면
+   * 기본 선택 프로젝트로 사용
+   */
+  const defaultProjectId =
+      currentProject?.role === 'LEADER'
+          ? String(
+              currentProject.projectId
+          )
+          : leaderProjects.length > 0
+              ? String(
+                  leaderProjects[0].projectId
+              )
+              : '';
 
-  const projectMembers = members.filter(
-    (member) => member.projectId === projectId
-  );
+  const [
+    selectedProjectId,
+    setSelectedProjectId,
+  ] = useState('');
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [assigneeId, setAssigneeId] = useState('');
-  const [deadline, setDeadline] = useState('');
+  const projectId =
+      selectedProjectId ||
+      defaultProjectId;
 
-  const handleSubmit = (event) => {
+  const selectedProject =
+      leaderProjects.find(
+          (project) =>
+              String(project.projectId) ===
+              String(projectId)
+      );
+
+  const projectMembers =
+      members.filter(
+          (member) =>
+              String(member.projectId) ===
+              String(projectId)
+      );
+
+  const [title, setTitle] =
+      useState('');
+
+  const [description, setDescription] =
+      useState('');
+
+  const [assigneeId, setAssigneeId] =
+      useState('');
+
+  const [deadline, setDeadline] =
+      useState('');
+
+  const [submitting, setSubmitting] =
+      useState(false);
+
+  /*
+   * LEADER 프로젝트가 없는 경우
+   */
+  if (leaderProjects.length === 0) {
+    return (
+        <div className="task-create-page">
+
+          <header className="task-create-header">
+            <h1>업무 추가</h1>
+          </header>
+
+          <section className="task-create-section">
+
+            <p>
+              업무를 생성할 수 있는 프로젝트가 없습니다.
+            </p>
+
+            <p>
+              업무 생성은 프로젝트 팀장만 가능합니다.
+            </p>
+
+          </section>
+
+          <div className="task-create-actions">
+
+            <button
+                type="button"
+                className="task-create-cancel-button"
+                onClick={() =>
+                    navigate('/tasks')
+                }
+            >
+              돌아가기
+            </button>
+
+          </div>
+
+        </div>
+    );
+  }
+
+  const handleProjectChange = (
+      event
+  ) => {
+    setSelectedProjectId(
+        event.target.value
+    );
+
+    /*
+     * 프로젝트가 바뀌면
+     * 담당자도 초기화
+     */
+    setAssigneeId('');
+  };
+
+  const handleSubmit = async (
+      event
+  ) => {
     event.preventDefault();
 
-    const trimmedTitle = title.trim();
+    const trimmedTitle =
+        title.trim();
 
-    if (!trimmedTitle || !project || !assigneeId) {
+    if (!projectId) {
+      alert(
+          '프로젝트를 선택해주세요.'
+      );
       return;
     }
 
-    const nextTaskId = Date.now();
+    if (!trimmedTitle) {
+      alert(
+          '업무 제목을 입력해주세요.'
+      );
+      return;
+    }
 
-    addTask({
-      taskId: nextTaskId,
-      projectId,
-      meetingId: meetingId
-        ? Number(meetingId)
-        : undefined,
-      title: trimmedTitle,
-      description: description.trim(),
-      assigneeId: Number(assigneeId),
-      status: 'TODO',
-      deadline: deadline || null,
-      createdAt: new Date().toISOString(),
-    });
+    if (!assigneeId) {
+      alert(
+          '담당자를 선택해주세요.'
+      );
+      return;
+    }
 
-    navigate('/dashboard', {
-      state: {
-        activeTab: 'settings',
-      },
-    });
-  };
+    try {
+      setSubmitting(true);
 
-  const handleCancel = () => {
-    navigate('/dashboard', {
-      state: {
-        activeTab: 'settings',
-      },
-    });
+      await addTask(
+          {
+            title: trimmedTitle,
+            description:
+                description.trim(),
+            assigneeId:
+                Number(assigneeId),
+            deadline:
+                deadline || null,
+          },
+          Number(projectId)
+      );
+
+      /*
+       * 생성한 프로젝트를
+       * 현재 프로젝트로 변경
+       */
+      if (selectedProject) {
+        setCurrentProject(
+            selectedProject
+        );
+      }
+
+      alert(
+          '업무가 생성되었습니다.'
+      );
+
+      navigate('/tasks');
+
+    } catch (error) {
+      console.error(
+          '업무 생성 실패:',
+          error
+      );
+
+      alert(
+          error.message ||
+          '업무 생성에 실패했습니다.'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="task-create-page">
+      <div className="task-create-page">
 
-      <header className="task-create-header">
-        <h1>업무 추가</h1>
+        <header className="task-create-header">
 
-        <p>
-          {project?.name || '프로젝트'} 프로젝트에 새로운 업무를 추가해보세요.
-        </p>
-      </header>
+          <h1>업무 추가</h1>
 
+          <p>
+            프로젝트에 새로운 업무를 추가해보세요.
+          </p>
 
-      <form
-        className="task-create-form"
-        onSubmit={handleSubmit}
-      >
+        </header>
 
-        <div className="task-create-section">
+        <form
+            className="task-create-form"
+            onSubmit={handleSubmit}
+        >
 
-          <div className="task-create-project">
-            <span>프로젝트</span>
+          <div className="task-create-section">
 
-            <strong>
-              {project?.name || '프로젝트'}
-            </strong>
-          </div>
+            {/* 프로젝트 */}
 
+            <div className="task-create-field">
 
-          <div className="task-create-field">
+              <label htmlFor="task-project">
+                프로젝트
+                <span>*</span>
+              </label>
 
-            <label htmlFor="task-title">
-              업무 제목
-              <span>*</span>
-            </label>
+              <select
+                  id="task-project"
+                  value={projectId}
+                  onChange={
+                    handleProjectChange
+                  }
+                  required
+              >
 
-            <input
-              id="task-title"
-              type="text"
-              value={title}
-              onChange={(event) =>
-                setTitle(event.target.value)
-              }
-              placeholder="업무 제목을 입력해주세요"
-              required
-            />
+                {leaderProjects.map(
+                    (project) => (
+                        <option
+                            key={
+                              project.projectId
+                            }
+                            value={
+                              project.projectId
+                            }
+                        >
+                          {project.name}
+                        </option>
+                    )
+                )}
 
-          </div>
+              </select>
 
+            </div>
 
-          <div className="task-create-field">
+            {/* 업무 제목 */}
 
-            <label htmlFor="task-description">
-              업무 설명
-            </label>
+            <div className="task-create-field">
 
-            <textarea
-              id="task-description"
-              value={description}
-              onChange={(event) =>
-                setDescription(event.target.value)
-              }
-              placeholder="업무 내용을 간단하게 설명해주세요"
-              rows={5}
-            />
+              <label htmlFor="task-title">
+                업무 제목
+                <span>*</span>
+              </label>
 
-          </div>
+              <input
+                  id="task-title"
+                  type="text"
+                  value={title}
+                  onChange={(event) =>
+                      setTitle(
+                          event.target.value
+                      )
+                  }
+                  placeholder="업무 제목을 입력해주세요"
+                  required
+              />
 
+            </div>
 
-          <div className="task-create-field">
+            {/* 설명 */}
 
-            <label htmlFor="task-assignee">
-              담당자
-              <span>*</span>
-            </label>
+            <div className="task-create-field">
 
-            <select
-              id="task-assignee"
-              value={assigneeId}
-              onChange={(event) =>
-                setAssigneeId(event.target.value)
-              }
-              required
-            >
-              <option value="">
-                담당자를 선택해주세요
-              </option>
+              <label htmlFor="task-description">
+                업무 설명
+              </label>
 
-              {projectMembers.map((member) => (
-                <option
-                  key={`${member.projectId}-${member.memberId}`}
-                  value={member.memberId}
-                >
-                  {member.name}
+              <textarea
+                  id="task-description"
+                  value={description}
+                  onChange={(event) =>
+                      setDescription(
+                          event.target.value
+                      )
+                  }
+                  placeholder="업무 내용을 간단하게 설명해주세요"
+                  rows={5}
+              />
+
+            </div>
+
+            {/* 담당자 */}
+
+            <div className="task-create-field">
+
+              <label htmlFor="task-assignee">
+                담당자
+                <span>*</span>
+              </label>
+
+              <select
+                  id="task-assignee"
+                  value={assigneeId}
+                  onChange={(event) =>
+                      setAssigneeId(
+                          event.target.value
+                      )
+                  }
+                  required
+              >
+
+                <option value="">
+                  담당자를 선택해주세요
                 </option>
-              ))}
 
-            </select>
+                {projectMembers.map(
+                    (member) => (
+                        <option
+                            key={
+                              member.userId
+                            }
+                            value={
+                              member.userId
+                            }
+                        >
+                          {member.name}
+                          {member.role ===
+                          'LEADER'
+                              ? ' (팀장)'
+                              : ''}
+                        </option>
+                    )
+                )}
+
+              </select>
+
+            </div>
+
+            {/* 마감일 */}
+
+            <div className="task-create-field">
+
+              <label htmlFor="task-deadline">
+                마감일
+              </label>
+
+              <input
+                  id="task-deadline"
+                  type="datetime-local"
+                  value={deadline}
+                  onChange={(event) =>
+                      setDeadline(
+                          event.target.value
+                      )
+                  }
+              />
+
+            </div>
 
           </div>
 
+          <div className="task-create-actions">
 
-          <div className="task-create-field">
+            <button
+                type="button"
+                className="task-create-cancel-button"
+                onClick={() =>
+                    navigate('/tasks')
+                }
+            >
+              취소
+            </button>
 
-            <label htmlFor="task-deadline">
-              마감일
-            </label>
-
-            <input
-              id="task-deadline"
-              type="datetime-local"
-              value={deadline}
-              onChange={(event) =>
-                setDeadline(event.target.value)
-              }
-            />
+            <button
+                type="submit"
+                className="task-create-submit-button"
+                disabled={submitting}
+            >
+              {submitting
+                  ? '생성 중...'
+                  : '업무 추가'}
+            </button>
 
           </div>
 
-        </div>
+        </form>
 
-
-        <div className="task-create-actions">
-
-          <button
-            type="button"
-            className="task-create-cancel-button"
-            onClick={handleCancel}
-          >
-            취소
-          </button>
-
-          <button
-            type="submit"
-            className="task-create-submit-button"
-          >
-            업무 추가
-          </button>
-
-        </div>
-
-      </form>
-
-    </div>
+      </div>
   );
 }
 

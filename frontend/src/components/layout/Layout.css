@@ -15,6 +15,9 @@
 ========================================================= */
 
 .sidebar {
+  display: flex;
+  flex-direction: column;
+
   width: 150px;
   min-height: 100vh;
 
@@ -43,6 +46,10 @@
 }
 
 .profile-image {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 36px;
   height: 36px;
 
@@ -51,8 +58,18 @@
   border-radius: 50%;
 
   background: #999;
+
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 /* =========================================================
    Sidebar Menu
@@ -104,6 +121,31 @@
 
 
 /* =========================================================
+   Sidebar Bottom
+========================================================= */
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding-top: 20px;
+
+  border-top: 1px solid #999;
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 15px;
+}
+
+.settings-icon {
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
    Main Content
 ========================================================= */
 
@@ -117,4 +159,22 @@
   padding: 40px 50px;
 
   background: #fff;
+}
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.logout-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.logout-item:hover {
+  background: #f3f4f6;
 }

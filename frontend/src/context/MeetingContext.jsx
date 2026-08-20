@@ -1,107 +1,147 @@
-import { createContext, useContext, useState } from 'react';
-import { mockMeetings } from '../mocks/meetingMock';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+
+import {
+  getMeetings,
+  updateMeetingImportant,
+  updateMeetingContent,
+} from '../services/meetingService';
+
+import { useProject } from './ProjectContext';
 
 const MeetingContext = createContext(null);
 
 export function MeetingProvider({ children }) {
-  const [meetings, setMeetings] = useState(
-    mockMeetings.map((meeting) => ({
-      ...meeting,
-      minutes: meeting.minutes || '',
-      summary: meeting.summary || '',
-    }))
-  );
+  const { currentProject } = useProject();
 
-    // 회의 생성
-  const addMeeting = (meeting) => {
-    setMeetings((prevMeetings) => [
-      ...prevMeetings,
-      {
-        ...meeting,
-        minutes: meeting.minutes || '',
-        summary: meeting.summary || '',
-      },
-    ]);
-  };
+  const [meetings, setMeetings] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-
-  // 회의 중요 여부 변경
-  const toggleImportant = (meetingId) => {
-    setMeetings((prevMeetings) =>
-      prevMeetings.map((meeting) =>
-        meeting.meetingId === meetingId
-          ? {
-              ...meeting,
-              isImportant: !meeting.isImportant,
-            }
-          : meeting
-      )
-    );
-  };
-
-  // 회의록 저장
-  const saveMinutes = (meetingId, minutes) => {
-    setMeetings((prevMeetings) =>
-      prevMeetings.map((meeting) =>
-        meeting.meetingId === meetingId
-          ? {
-              ...meeting,
-              minutes,
-              summary: createSummary(minutes),
-            }
-          : meeting
-      )
-    );
-  };
-
-  // 회의록 한 문장 요약
-  const createSummary = (minutes) => {
-    if (!minutes || !minutes.trim()) {
-      return '';
+  const fetchMeetings = async (projectId) => {
+    if (!projectId) {
+      return [];
     }
 
-    const cleanText = minutes
-      .replace(/\s+/g, ' ')
-      .trim();
+    try {
+      setLoading(true);
 
-    if (cleanText.length <= 80) {
-      return cleanText;
+      const data = await getMeetings(projectId);
+
+      const list = Array.isArray(data)
+          ? data
+          : data?.meetings || data?.content || [];
+
+      setMeetings(list);
+
+      console.log('회의 목록 데이터:', list);
+
+      return list;
+    } catch (error) {
+      console.error(
+          '회의 목록 로드 실패:',
+          error
+      );
+
+      setMeetings([]);
+
+      return [];
+    } finally {
+      setLoading(false);
     }
-
-    return `${cleanText.slice(0, 80)}...`;
   };
 
-  const getMeetingById = (meetingId) => {
-    return meetings.find(
-      (meeting) =>
-        String(meeting.meetingId) === String(meetingId)
+  const saveMinutes = async (
+      meetingId,
+      manualContent
+  ) => {
+    await updateMeetingContent(
+        meetingId,
+        manualContent
     );
+
+    if (currentProject?.projectId) {
+      await fetchMeetings(
+          currentProject.projectId
+      );
+    }
+  };
+
+  const toggleImportant = async (
+      meetingId
+  ) => {
+    const target = meetings.find(
+        (meeting) =>
+            meeting.meetingId === meetingId
+    );
+
+    if (!target) {
+      return;
+    }
+
+    const next = !target.important;
+
+    try {
+      await updateMeetingImportant(
+          meetingId,
+          next
+      );
+
+      setMeetings((prev) =>
+          prev.map((meeting) =>
+              meeting.meetingId === meetingId
+                  ? {
+                    ...meeting,
+                    important: next,
+                  }
+                  : meeting
+          )
+      );
+    } catch (error) {
+      console.error(
+          '중요 회의 상태 변경 실패:',
+          error
+      );
+    }
+  };
+
+  useEffect(() => {
+    const loadMeetings = async () => {
+      if (!currentProject?.projectId) {
+        return;
+      }
+
+      await fetchMeetings(
+          currentProject.projectId
+      );
+    };
+
+    void loadMeetings();
+  }, [currentProject?.projectId]);
+
+  const value = {
+    meetings,
+    setMeetings,
+    fetchMeetings,
+    saveMinutes,
+    toggleImportant,
+    loading,
   };
 
   return (
-    <MeetingContext.Provider
-      value={{
-        meetings,
-        setMeetings,
-        addMeeting,
-        toggleImportant,
-        saveMinutes,
-        getMeetingById,
-      }}
-    >
-      {children}
-    </MeetingContext.Provider>
+      <MeetingContext.Provider value={value}>
+        {children}
+      </MeetingContext.Provider>
   );
 }
 
+export function useMeeting() {
+  return useContext(MeetingContext) || {};
+}
+
 export function useMeetings() {
-  const context = useContext(MeetingContext);
-
-  if (!context) {
-    throw new Error(
-      'useMeetings는 MeetingProvider 안에서 사용해야 합니다.'
-    );
-  }
-
-  return context;
+  return useContext(MeetingContext) || {};
 }

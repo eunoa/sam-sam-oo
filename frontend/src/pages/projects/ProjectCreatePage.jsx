@@ -5,42 +5,68 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useProjects } from '../../context/ProjectContext';
 
-function ProjectCreatePage() {
+function ProjectCreatePage({
+  isModal = false,
+  onCancel,
+  onCreated,
+}) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { projects, addProject } = useProjects();
+
+  const { projects, addProject } =
+    useProjects();
 
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [description, setDescription] =
+    useState('');
 
-  const handleSubmit = (event) => {
+  /*
+   * =========================
+   * 프로젝트 생성
+   * =========================
+   */
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const nextProjectId =
-      projects.length > 0
-        ? Math.max(...projects.map((project) => project.projectId)) + 1
-        : 1;
+    const trimmedName = name.trim();
 
-    const newProject = {
-      projectId: nextProjectId,
-      name: name.trim(),
-      description: description.trim(),
-    };
+    if (!trimmedName) {
+      return;
+    }
 
-    addProject(newProject);
+    try {
+      const newProject = await addProject({
+        name: trimmedName,
+        description: description.trim(),
+      });
 
-    navigate('/dashboard', { state: { activeTab: 'team' } });
-  };
+      if (isModal) {
+        setName('');
+        setDescription('');
 
-  const handleCancel = () => {
-    const from = location.state?.from || '/dashboard';
+        if (onCreated) {
+          onCreated(newProject);
+        }
 
-    navigate(from, {
-      state: {
-        activeTab: location.state?.activeTab || 'overview',
-      },
-    });
-  };
+        return;
+      }
+
+      navigate('/dashboard', {
+        state: {
+          activeTab: 'team',
+        },
+      });
+    } catch (error) {
+      console.error('프로젝트 생성 실패:', error);
+    }
+  }
+
+  /*
+   * =========================
+   * 기존 독립 페이지
+   * =========================
+   */
 
   return (
     <div className="project-create-page">
@@ -48,11 +74,16 @@ function ProjectCreatePage() {
       <header className="project-create-header">
 
         <div>
-          <h1>프로젝트 생성</h1>
+
+          <h1>
+            프로젝트 생성
+          </h1>
 
           <p>
-            새로운 프로젝트를 만들어보세요.
+            새로운 프로젝트를
+            만들어보세요.
           </p>
+
         </div>
 
       </header>
@@ -96,7 +127,9 @@ function ProjectCreatePage() {
               id="project-description"
               value={description}
               onChange={(event) =>
-                setDescription(event.target.value)
+                setDescription(
+                  event.target.value
+                )
               }
               placeholder="이 프로젝트가 무엇을 하는지 간단하게 설명해주세요"
               rows={5}
