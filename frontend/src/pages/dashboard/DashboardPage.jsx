@@ -1,6 +1,9 @@
 import './DashboardPage.css';
 
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useState,
+} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import ProjectCard from '../../components/project/ProjectCard';
@@ -10,6 +13,8 @@ import { useMeetings } from '../../context/MeetingContext';
 import { useTasks } from '../../context/TaskContext';
 import { useProjects } from '../../context/ProjectContext';
 import { useMembers } from '../../context/MemberContext';
+
+import { getTasks } from '../../services/taskService';
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -43,6 +48,12 @@ function DashboardPage() {
     useState(false);
 
   const [projectNameError, setProjectNameError] = useState('');
+
+  const [settingsTasks, setSettingsTasks] =
+      useState([]);
+
+  const [settingsTasksLoading, setSettingsTasksLoading] =
+      useState(false);
 
   // 현재 열려 있는 프로젝트 관리 메뉴
   const [openProjectMenu, setOpenProjectMenu] = useState(null);
@@ -357,6 +368,90 @@ function DashboardPage() {
       (project) =>
           project.role === 'LEADER'
   );
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadLeaderProjectTasks = async () => {
+      const myLeaderProjects =
+          projects.filter(
+              (project) =>
+                  project.role === 'LEADER'
+          );
+
+      if (myLeaderProjects.length === 0) {
+        if (!cancelled) {
+          setSettingsTasks([]);
+        }
+
+        return;
+      }
+
+      try {
+        setSettingsTasksLoading(true);
+
+        const taskLists =
+            await Promise.all(
+                myLeaderProjects.map(
+                    async (project) => {
+                      try {
+                        const data =
+                            await getTasks(
+                                project.projectId
+                            );
+
+                        const projectTasks =
+                            Array.isArray(data)
+                                ? data
+                                : data?.tasks ?? [];
+
+                        return projectTasks.map(
+                            (task) => ({
+                              ...task,
+                              projectId:
+                                  task.projectId ??
+                                  project.projectId,
+                            })
+                        );
+                      } catch (error) {
+                        console.error(
+                            `프로젝트 ${project.projectId} 업무 조회 실패:`,
+                            error
+                        );
+
+                        return [];
+                      }
+                    }
+                )
+            );
+
+        if (!cancelled) {
+          setSettingsTasks(
+              taskLists.flat()
+          );
+        }
+      } catch (error) {
+        console.error(
+            '업무 설정 데이터 조회 실패:',
+            error
+        );
+
+        if (!cancelled) {
+          setSettingsTasks([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setSettingsTasksLoading(false);
+        }
+      }
+    };
+
+    void loadLeaderProjectTasks();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [projects]);
 
   /*
    * =========================
@@ -978,7 +1073,7 @@ function DashboardPage() {
             handleTabChange('settings')
           }
         >
-          업무 설정
+          업무 관리(팀장)
         </button>
 
       </nav>
@@ -1117,483 +1212,470 @@ function DashboardPage() {
 
       {/* 업무 설정 */}
 
+      {/* =========================
+    업무 관리 - 팀장 전용
+========================= */}
+
       {activeTab === 'settings' && (
 
-        <div className="task-settings-content">
+          <div className="task-settings-content">
 
-          <div className="task-status-legend">
+            {/* 업무 상태 안내 */}
 
-            <span className="task-status-legend-title">
-              업무 상태
-            </span>
+            <div className="task-status-legend">
 
-            <span className="task-status-legend-item task-status-legend-waiting">
-              <i />
-              업무 대기
-            </span>
+      <span className="task-status-legend-title">
+        업무 상태
+      </span>
 
-            <span className="task-status-legend-item task-status-legend-progress">
-              <i />
-              업무 중
-            </span>
+              <span className="task-status-legend-item">
+        <i className="task-status-dot task-status-dot-todo" />
+        할 일
+      </span>
 
-            <span className="task-status-legend-item task-status-legend-done">
-              <i />
-              완료
-            </span>
+              <span className="task-status-legend-item">
+        <i className="task-status-dot task-status-dot-progress" />
+        진행 중
+      </span>
 
-          </div>
+              <span className="task-status-legend-item">
+        <i className="task-status-dot task-status-dot-done" />
+        완료
+      </span>
 
+            </div>
 
-          {leaderProjects.length ===
-          0 ? (
+            {settingsTasksLoading ? (
 
-            <p className="task-settings-empty">
-              현재 관리 중인 프로젝트가
-              없습니다.
-            </p>
+                <div className="task-settings-empty">
+                  업무를 불러오는 중입니다.
+                </div>
 
-          ) : (
+            ) : leaderProjects.length === 0 ? (
 
-            leaderProjects.map(
-              (project) => {
+                <div className="task-settings-empty">
+                  현재 팀장으로 관리 중인 프로젝트가 없습니다.
+                </div>
 
-                const projectTasks =
-                  tasks.filter(
-                    (task) =>
-                      task.projectId ===
-                      project.projectId
-                  );
+            ) : (
 
-                const recentMeetingTasks =
-                  projectTasks
-                    .filter(
-                      (task) =>
-                        task.meetingId
-                    )
-                    .sort((a, b) => {
+                leaderProjects.map(
+                    (project) => {
 
-                      const meetingA =
-                        meetings.find(
-                          (meeting) =>
-                            meeting.meetingId ===
-                            a.meetingId
-                        );
+                      const projectTasks =
+                          settingsTasks.filter(
+                              (task) =>
+                                  String(task.projectId) ===
+                                  String(project.projectId)
+                          );
 
-                      const meetingB =
-                        meetings.find(
-                          (meeting) =>
-                            meeting.meetingId ===
-                            b.meetingId
-                        );
+                      const recentMeetingTasks =
+                          projectTasks
+                              .filter(
+                                  (task) =>
+                                      task.meetingId
+                              )
+                              .sort(
+                                  (a, b) => {
+
+                                    const meetingA =
+                                        meetings.find(
+                                            (meeting) =>
+                                                String(meeting.meetingId) ===
+                                                String(a.meetingId)
+                                        );
+
+                                    const meetingB =
+                                        meetings.find(
+                                            (meeting) =>
+                                                String(meeting.meetingId) ===
+                                                String(b.meetingId)
+                                        );
+
+                                    return (
+                                        new Date(
+                                            meetingB?.scheduledAt || 0
+                                        ) -
+                                        new Date(
+                                            meetingA?.scheduledAt || 0
+                                        )
+                                    );
+                                  }
+                              );
 
                       return (
-                        new Date(
-                          meetingB?.scheduledAt ||
-                            0
-                        ) -
-                        new Date(
-                          meetingA?.scheduledAt ||
-                            0
-                        )
-                      );
-                    });
 
-                return (
+                          <section
+                              key={project.projectId}
+                              className="task-project-section"
+                          >
 
-                  <section
-                    key={
-                      project.projectId
-                    }
-                    className="task-project-section"
-                  >
+                            {/* 프로젝트 제목 */}
 
-                    <div className="task-project-header">
+                            <div className="task-project-header">
 
-                      <div>
-                        <h2>
-                          {project.name}
-                        </h2>
+                              <div>
 
-                        <p>
-                          {
-                            project.description
-                          }
-                        </p>
-                      </div>
+                                <div className="task-project-title-row">
 
-                      <span>
-                        {projectTasks.length}
-                        개 업무
+                                  <h2>
+                                    {project.name}
+                                  </h2>
+
+                                  <span className="task-project-leader-label">
+                      내가 팀장
+                    </span>
+
+                                </div>
+
+                                {project.description && (
+                                    <p>
+                                      {project.description}
+                                    </p>
+                                )}
+
+                              </div>
+
+                              <span className="task-project-count">
+                  {projectTasks.length}개 업무
+                </span>
+
+                            </div>
+
+                            <div className="task-settings-grid">
+
+                              {/* =========================
+                    프로젝트 전체 업무
+                ========================= */}
+
+                              <div className="task-settings-column">
+
+                                <div className="task-settings-column-header">
+
+                                  <div>
+
+                                    <h3>
+                                      프로젝트 업무
+                                    </h3>
+
+                                    <span>
+                        현재 등록된 업무
                       </span>
 
-                    </div>
+                                  </div>
 
-
-                    <div className="task-settings-grid">
-
-                      <div className="task-settings-column">
-
-                        <div className="task-settings-column-header">
-
-                          <div>
-                            <h3>
-                              프로젝트 업무
-                            </h3>
-
-                            <span>
-                              현재 등록된 업무
-                            </span>
-                          </div>
-
-                          <button
-                            type="button"
-                            className="task-add-button"
-                            onClick={() =>
-                              navigate(
-                                `/tasks/create?projectId=${project.projectId}`
-                              )
-                            }
-                          >
-                            + 업무 추가
-                          </button>
-
-                        </div>
-
-
-                        <div className="task-list">
-
-                          {projectTasks.length >
-                          0 ? (
-
-                            projectTasks
-                              .slice(0, 4)
-                              .map(
-                                (task) => {
-
-                                  const assignee =
-                                    members.find(
-                                      (member) =>
-                                        member.memberId ===
-                                          task.assigneeId &&
-                                        member.projectId ===
-                                          task.projectId
-                                    );
-
-                                  return (
-
-                                    <div
-                                      key={
-                                        task.taskId
+                                  <button
+                                      type="button"
+                                      className="task-add-button"
+                                      onClick={() =>
+                                          navigate(
+                                              `/tasks/create?projectId=${project.projectId}`
+                                          )
                                       }
-                                      className="task-card"
-                                    >
+                                  >
+                                    + 업무 추가
+                                  </button>
 
-                                      <div className="task-main">
+                                </div>
 
-                                        <strong>
-                                          {
-                                            task.title
+                                <div className="task-list">
+
+                                  {projectTasks.length > 0 ? (
+
+                                      projectTasks
+                                          .slice(0, 6)
+                                          .map(
+                                              (task) => {
+
+                                                const assignee =
+                                                    members.find(
+                                                        (member) =>
+                                                            String(member.memberId) ===
+                                                            String(task.assigneeId) &&
+                                                            String(member.projectId) ===
+                                                            String(project.projectId)
+                                                    );
+
+                                                return (
+
+                                                    <div
+                                                        key={task.taskId}
+                                                        className="task-settings-card"
+                                                    >
+
+                                                      <div className="task-settings-card-main">
+
+                                                        <strong>
+                                                          {task.title}
+                                                        </strong>
+
+                                                        {task.description && (
+                                                            <p>
+                                                              {task.description}
+                                                            </p>
+                                                        )}
+
+                                                        <span className="task-settings-assignee">
+                                    담당자 ·{' '}
+                                                          {assignee
+                                                              ? assignee.name
+                                                              : '미지정'}
+                                  </span>
+
+                                                      </div>
+
+                                                      <span
+                                                          className={`task-status-badge ${
+                                                              task.status === 'TODO'
+                                                                  ? 'task-status-badge-todo'
+                                                                  : task.status === 'IN_PROGRESS'
+                                                                      ? 'task-status-badge-progress'
+                                                                      : 'task-status-badge-done'
+                                                          }`}
+                                                      >
+                                  {task.status === 'TODO'
+                                      ? '할 일'
+                                      : task.status === 'IN_PROGRESS'
+                                          ? '진행 중'
+                                          : '완료'}
+                                </span>
+
+                                                    </div>
+
+                                                );
+                                              }
+                                          )
+
+                                  ) : (
+
+                                      <div className="task-empty">
+                                        등록된 업무가 없습니다.
+                                      </div>
+
+                                  )}
+
+                                </div>
+
+                                {projectTasks.length > 6 && (
+
+                                    <div className="task-settings-actions">
+
+                                      <button
+                                          type="button"
+                                          className="task-view-all-button"
+                                          onClick={() =>
+                                              navigate('/tasks')
                                           }
-                                        </strong>
-
-                                        {task.description && (
-                                          <p className="task-description">
-                                            {
-                                              task.description
-                                            }
-                                          </p>
-                                        )}
-
-                                        <span className="task-assignee">
-                                          {assignee
-                                            ? `담당자 ${assignee.name}`
-                                            : '담당자 미지정'}
-                                        </span>
-
-                                      </div>
-
-
-                                      <div className="task-meta">
-
-                                        <span
-                                          className={`task-status task-status-${task.status.toLowerCase()}`}
-                                        >
-                                          {task.status ===
-                                            'TODO' &&
-                                            '업무 대기'}
-
-                                          {task.status ===
-                                            'IN_PROGRESS' &&
-                                            '업무 중'}
-
-                                          {task.status ===
-                                            'DONE' &&
-                                            '완료'}
-                                        </span>
-
-                                      </div>
+                                      >
+                                        전체 보기
+                                      </button>
 
                                     </div>
-                                  );
-                                }
-                              )
 
-                          ) : (
+                                )}
 
-                            <p className="task-empty">
-                              등록된 업무가
-                              없습니다.
-                            </p>
+                              </div>
 
-                          )}
+                              {/* =========================
+                    최근 회의에서 생성된 업무
+                ========================= */}
 
-                        </div>
+                              <div className="task-settings-column task-recent-meetings">
 
+                                <div className="task-settings-column-header">
 
-                        {projectTasks.length >=
-                          5 && (
+                                  <div>
 
-                          <div className="task-settings-actions">
+                                    <h3>
+                                      최근 회의에서 생성된 업무
+                                    </h3>
 
-                            <button
-                              type="button"
-                              className="task-view-all-button"
-                              onClick={() =>
-                                navigate(
-                                  `/projects/tasks?projectId=${project.projectId}`
-                                )
-                              }
-                            >
-                              전체 보기
-                            </button>
+                                    <span>
+                        AI 업무 추천으로 생성된 업무
+                      </span>
 
-                          </div>
+                                  </div>
 
-                        )}
+                                </div>
 
-                      </div>
+                                <div className="task-meeting-list">
 
+                                  {recentMeetingTasks.length > 0 ? (
 
-                      <div className="task-settings-column task-recent-meetings">
+                                      recentMeetingTasks
+                                          .slice(0, 6)
+                                          .map(
+                                              (task) => {
 
-                        <div className="task-settings-column-header">
+                                                const meeting =
+                                                    meetings.find(
+                                                        (item) =>
+                                                            String(item.meetingId) ===
+                                                            String(task.meetingId)
+                                                    );
 
-                          <div>
-                            <h3>
-                              생성된 업무
-                            </h3>
+                                                const assignee =
+                                                    members.find(
+                                                        (member) =>
+                                                            String(member.memberId) ===
+                                                            String(task.assigneeId) &&
+                                                            String(member.projectId) ===
+                                                            String(project.projectId)
+                                                    );
 
-                            <span>
-                              최근 회의에서 확인된
-                              업무
-                            </span>
-                          </div>
+                                                return (
 
-                        </div>
+                                                    <div
+                                                        key={task.taskId}
+                                                        className="task-meeting-settings-card"
+                                                    >
 
+                                                      <div className="task-meeting-settings-top">
 
-                        <div className="task-meeting-list">
+                                  <span className="task-meeting-name">
+                                    {meeting
+                                        ? meeting.title
+                                        : '회의 업무'}
+                                  </span>
 
-                          {recentMeetingTasks.length >
-                          0 ? (
+                                                        <span
+                                                            className={`task-status-badge ${
+                                                                task.status === 'TODO'
+                                                                    ? 'task-status-badge-todo'
+                                                                    : task.status === 'IN_PROGRESS'
+                                                                        ? 'task-status-badge-progress'
+                                                                        : 'task-status-badge-done'
+                                                            }`}
+                                                        >
+                                    {task.status === 'TODO'
+                                        ? '할 일'
+                                        : task.status === 'IN_PROGRESS'
+                                            ? '진행 중'
+                                            : '완료'}
+                                  </span>
 
-                            recentMeetingTasks
-                              .slice(0, 4)
-                              .map(
-                                (task) => {
+                                                      </div>
 
-                                  const meeting =
-                                    meetings.find(
-                                      (meeting) =>
-                                        meeting.meetingId ===
-                                        task.meetingId
-                                    );
+                                                      <strong className="task-meeting-settings-title">
+                                                        {task.title}
+                                                      </strong>
 
-                                  const assignee =
-                                    members.find(
-                                      (member) =>
-                                        member.memberId ===
-                                          task.assigneeId &&
-                                        member.projectId ===
-                                          task.projectId
-                                    );
+                                                      {task.description && (
+                                                          <p className="task-meeting-settings-description">
+                                                            {task.description}
+                                                          </p>
+                                                      )}
 
-                                  return (
+                                                      <span className="task-settings-assignee">
+                                  담당자 ·{' '}
+                                                        {assignee
+                                                            ? assignee.name
+                                                            : '미지정'}
+                                </span>
 
-                                    <div
-                                      key={
-                                        task.taskId
-                                      }
-                                      className="task-meeting-card"
-                                    >
+                                                    </div>
 
-                                      <div className="task-meeting-card-header">
-
-                                        <strong>
-                                          {meeting
-                                            ? meeting.title
-                                            : '회의 정보 없음'}
-                                        </strong>
-
-
-                                        <div className="task-meeting-task-content">
-
-                                          <h4 className="task-meeting-task-title">
-                                            {
-                                              task.title
-                                            }
-                                          </h4>
-
-                                          {task.description && (
-                                            <p className="task-meeting-task-description">
-                                              {
-                                                task.description
+                                                );
                                               }
-                                            </p>
-                                          )}
+                                          )
 
-                                        </div>
+                                  ) : (
 
-
-                                        <div className="task-meeting-meta">
-
-                                          <span
-                                            className={`task-status task-status-${task.status.toLowerCase()}`}
-                                          >
-                                            {task.status ===
-                                              'TODO' &&
-                                              '업무 대기'}
-
-                                            {task.status ===
-                                              'IN_PROGRESS' &&
-                                              '업무 중'}
-
-                                            {task.status ===
-                                              'DONE' &&
-                                              '완료'}
-                                          </span>
-
-                                          {assignee ? (
-
-                                            <span className="task-meeting-assignee-name">
-                                              담당자{' '}
-                                              {
-                                                assignee.name
-                                              }
-                                            </span>
-
-                                          ) : (
-
-                                            <span className="task-meeting-unassigned">
-                                              담당자 지정 필요
-                                            </span>
-
-                                          )}
-
-                                        </div>
-
+                                      <div className="task-empty">
+                                        최근 회의에서 생성된 업무가 없습니다.
                                       </div>
 
+                                  )}
+
+                                </div>
+
+                                {recentMeetingTasks.length > 6 && (
+
+                                    <div className="task-settings-actions">
+
+                                      <button
+                                          type="button"
+                                          className="task-view-all-button"
+                                          onClick={() =>
+                                              navigate('/tasks')
+                                          }
+                                      >
+                                        전체 보기
+                                      </button>
+
                                     </div>
-                                  );
-                                }
-                              )
 
-                          ) : (
+                                )}
 
-                            <p className="task-empty">
-                              최근 회의에서 생성된
-                              업무가 없습니다.
-                            </p>
+                              </div>
 
-                          )}
+                            </div>
 
-                        </div>
+                          </section>
 
+                      );
+                    }
+                )
 
-                        {recentMeetingTasks.length >=
-                          5 && (
+            )}
 
-                          <div className="task-settings-actions">
-
-                            <button
-                              type="button"
-                              className="task-view-all-button"
-                              onClick={() =>
-                                navigate(
-                                  `/projects/tasks?projectId=${project.projectId}&source=meeting`
-                                )
-                              }
-                            >
-                              전체 보기
-                            </button>
-
-                          </div>
-
-                        )}
-
-                      </div>
-
-                    </div>
-
-                  </section>
-                );
-              }
-            )
-
-          )}
-
-        </div>
+          </div>
       )}
-
+      {/* =========================
+          프로젝트 삭제 확인 모달
+      ========================= */}
 
       {deleteProjectTarget && (
 
-        <div className="project-delete-modal-overlay">
+          <div className="project-delete-modal-overlay">
 
-          <div className="project-delete-modal" role="dialog" aria-modal="true">
+            <div
+                className="project-delete-modal"
+                role="dialog"
+                aria-modal="true"
+            >
 
-            <h3 className="project-delete-modal-title">
-              프로젝트 삭제
-            </h3>
+              <h3 className="project-delete-modal-title">
+                프로젝트 삭제
+              </h3>
 
-            <p className="project-delete-modal-message">
-              &quot;{deleteProjectTarget.name}&quot; 프로젝트를 삭제하시겠습니까?
-            </p>
+              <p className="project-delete-modal-message">
+                &quot;{deleteProjectTarget.name}&quot; 프로젝트를 삭제하시겠습니까?
+              </p>
 
-            <p className="project-delete-modal-warning">
-              삭제한 프로젝트는 되돌릴 수 없습니다.
-            </p>
+              <p className="project-delete-modal-warning">
+                삭제한 프로젝트는 되돌릴 수 없습니다.
+              </p>
 
-            <div className="project-delete-modal-actions">
+              <div className="project-delete-modal-actions">
 
-              <button
-                type="button"
-                className="project-delete-modal-cancel"
-                onClick={() =>
-                  setDeleteProjectTarget(null)
-                }
-              >
-                취소
-              </button>
+                <button
+                    type="button"
+                    className="project-delete-modal-cancel"
+                    onClick={() =>
+                        setDeleteProjectTarget(null)
+                    }
+                >
+                  취소
+                </button>
 
-              <button
-                type="button"
-                className="project-delete-modal-confirm"
-                onClick={handleConfirmDeleteProject}
-              >
-                삭제
-              </button>
+                <button
+                    type="button"
+                    className="project-delete-modal-confirm"
+                    onClick={
+                      handleConfirmDeleteProject
+                    }
+                >
+                  삭제
+                </button>
+
+              </div>
 
             </div>
 
           </div>
 
-        </div>
-
       )}
-
             {/* =========================
                     프로젝트 생성 모달
                 ========================= */}
