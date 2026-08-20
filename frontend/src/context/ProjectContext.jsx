@@ -23,20 +23,22 @@ export function ProjectProvider({ children }) {
       if (data && data.length > 0) {
         setCurrentProject((prev) => prev || data[0]);
       }
+      return data || [];
     } catch (error) {
       console.error('프로젝트 목록 로드 실패:', error);
     } finally {
       setLoading(false);
     }
   };
-
   const addProject = async (projectData) => {
-    const newProject = await createProject(projectData);
+    await createProject(projectData);
 
-    setProjects((prev) => [...prev, newProject]);
-    setCurrentProject((prev) => prev || newProject);
+    const updatedProjects = await fetchProjects();
+    const createdProject = updatedProjects.find(
+      (project) => project.name === projectData.name
+    );
 
-    return newProject;
+    return createdProject;
   };
 
   const deleteProject = async (projectId) => {

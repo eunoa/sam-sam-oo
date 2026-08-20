@@ -33,7 +33,7 @@ function MeetingMinutesPage() {
 
   const hasMinutes =
     meeting?.minutes &&
-    meeting.minutes.trim() !== '';
+    meeting-minutes.trim() !== '';
 
   /*
    * =========================
@@ -195,47 +195,32 @@ function MeetingMinutesPage() {
    * =========================
    */
 
-  const handleSave = () => {
-    const trimmedMinutes =
-      minutes.trim();
-
-    /*
-     * 빈 회의록 방지
-     */
+  const handleSave = async () => {
+    const trimmedMinutes = minutes.trim();
 
     if (!trimmedMinutes) {
-      alert(
-        '회의록 내용을 입력해주세요.'
-      );
-
+      alert("회의록 내용을 입력해주세요.");
       return;
     }
 
-    /*
-     * Context에 저장
-     *
-     * minutes 저장
-     * summary 생성
-     */
+    try {
+      await saveMinutes(
+        meeting.meetingId,
+        trimmedMinutes
+      );
 
-    saveMinutes(
-      meeting.meetingId,
-      trimmedMinutes
-    );
+      alert("회의록 저장 완료");
 
-    /*
-     * 저장 완료
-     *
-     * 전체 회의
-     * ↓
-     * 지난 회의
-     */
-
-    navigate('/meetings', {
-      state: {
-        activeTab: 'past',
-      },
-    });
+      navigate("/meetings", {
+        state: {
+          activeTab: "past",
+          refresh: true,
+        },
+      });
+    } catch (error) {
+      console.error("회의록 저장 실패:", error);
+      alert("회의록 저장 실패");
+    }
   };
 
   return (
@@ -349,10 +334,10 @@ function MeetingMinutesPage() {
 
           <div className="meeting-minutes-view">
 
-            {meeting.minutes ? (
+            {meeting-minutes ? (
 
               <p>
-                {meeting.minutes}
+                {meeting-minutes}
               </p>
 
             ) : (

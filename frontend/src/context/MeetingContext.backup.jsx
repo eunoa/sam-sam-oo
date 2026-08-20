@@ -5,18 +5,15 @@ import {
   useState,
 } from 'react';
 
-import {
-  getMeetings,
-  updateMeetingImportant,
-  updateMeetingContent,
-} from '../services/meetingService';
-
+import { getMeetings, updateMeetingImportant } from '../services/meetingService';
 import { useProject } from './ProjectContext';
 
 const MeetingContext = createContext(null);
 
 export function MeetingProvider({ children }) {
-  const { currentProject } = useProject();
+  const {
+    currentProject,
+  } = useProject();
 
   const [meetings, setMeetings] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,7 +21,7 @@ export function MeetingProvider({ children }) {
   const fetchMeetings = async (projectId) => {
     if (!projectId) {
       setMeetings([]);
-      return [];
+      return;
     }
 
     try {
@@ -32,66 +29,49 @@ export function MeetingProvider({ children }) {
 
       const data = await getMeetings(projectId);
 
-      const list = Array.isArray(data)
-        ? data
-        : data?.meetings || data?.content || [];
-
-      setMeetings([...list]);
-      console.log('회의 목록 데이터:', list);
-
-      return list;
+      setMeetings(data || []);
     } catch (error) {
       console.error('회의 목록 로드 실패:', error);
       setMeetings([]);
-      return [];
     } finally {
       setLoading(false);
     }
   };
 
-
-  const saveMinutes = async (meetingId, manualContent) => {
-    await updateMeetingContent(
-      meetingId,
-      manualContent
+  const toggleImportant = async (meetingId) => {
+    const targetMeeting = meetings.find(
+      (meeting) => meeting.meetingId === meetingId
     );
 
-    if (currentProject?.projectId) {
-      await fetchMeetings(currentProject.projectId);
+    if (!targetMeeting) {
+      return;
+    }
+
+    const nextImportant = !targetMeeting.isImportant;
+
+    try {
+      await updateMeetingImportant(
+        meetingId,
+        nextImportant
+      );
+
+      setMeetings((prevMeetings) =>
+        prevMeetings.map((meeting) =>
+          meeting.meetingId === meetingId
+            ? {
+                ...meeting,
+                isImportant: nextImportant,
+              }
+            : meeting
+        )
+      );
+    } catch (error) {
+      console.error(
+        '중요 회의 변경 실패:',
+        error
+      );
     }
   };
-
-
-  const toggleImportant = async (
-    meetingId
-  ) => {
-    const target = meetings.find(
-      (meeting) =>
-        meeting.meetingId === meetingId
-    );
-
-    if (!target) return;
-
-    const next =
-      !target.isImportant;
-
-    await updateMeetingImportant(
-      meetingId,
-      next
-    );
-
-    setMeetings((prev) =>
-      prev.map((meeting) =>
-        meeting.meetingId === meetingId
-          ? {
-              ...meeting,
-              isImportant: next,
-            }
-          : meeting
-      )
-    );
-  };
-
 
   useEffect(() => {
     if (currentProject?.projectId) {
@@ -101,14 +81,12 @@ export function MeetingProvider({ children }) {
     }
   }, [currentProject?.projectId]);
 
-
   return (
     <MeetingContext.Provider
       value={{
         meetings,
         setMeetings,
         fetchMeetings,
-        saveMinutes,
         toggleImportant,
         loading,
       }}
@@ -117,7 +95,6 @@ export function MeetingProvider({ children }) {
     </MeetingContext.Provider>
   );
 }
-
 
 export const useMeeting = () =>
   useContext(MeetingContext) || {};

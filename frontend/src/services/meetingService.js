@@ -21,6 +21,13 @@ export const updateMeetingContent = (
   );
 };
 
+export const updateMeetingImportant = (meetingId, isImportant) => {
+  return apiClient.patch(
+    `/meetings/${meetingId}/important`,
+    { important: isImportant }
+  );
+};
+
 export const getMeetings = (projectId) => {
   return apiClient.get(
     `/projects/${projectId}/meetings`
@@ -103,6 +110,7 @@ export const meetingService = {
   createMeeting,
   deleteMeeting,
   updateMeetingContent,
+  updateMeetingImportant,
   getMeetings,
   getMeetingDetail,
   recommendTime,

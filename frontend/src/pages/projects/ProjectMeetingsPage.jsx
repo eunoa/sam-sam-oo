@@ -67,8 +67,8 @@ function ProjectMeetingsPage() {
 
   const hasMinutes = (meeting) => {
     return (
-      typeof meeting.minutes === 'string' &&
-      meeting.minutes.trim() !== ''
+      typeof meeting.manualContent === 'string' &&
+      meeting.manualContent.trim() !== ''
     );
   };
 

@@ -25,7 +25,7 @@ function MemberInvitePage() {
 
   const projectName = project?.name || '프로젝트';
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const trimmedEmail = email.trim();
@@ -36,8 +36,8 @@ function MemberInvitePage() {
 
     const isDuplicate = members.some(
       (member) =>
-        member.projectId === projectId &&
-        member.email.toLowerCase() === trimmedEmail.toLowerCase()
+        String(member.projectId) === String(projectId) &&
+        member.email?.toLowerCase() === trimmedEmail.toLowerCase()
     );
 
     if (isDuplicate) {
@@ -46,31 +46,30 @@ function MemberInvitePage() {
         title: '초대할 수 없습니다.',
         message: '이미 해당 프로젝트에 등록된 팀원입니다.',
       });
+    if (!trimmedEmail) {
       return;
     }
+    }
 
-    const nextMemberId =
-      members.length > 0
-        ? Math.max(...members.map((member) => member.memberId)) + 1
-        : 1;
+    try {
+      await addMember(projectId, trimmedEmail);
 
-    const newMember = {
-      memberId: nextMemberId,
-      projectId,
-      name: trimmedEmail.split('@')[0],
-      email: trimmedEmail,
-      role: 'MEMBER',
-      profileImage: '',
-      activeTasks: 0,
-    };
+      setInviteModal({
+        type: 'success',
+        title: '초대 완료!',
+        message: `에게 팀원 초대를 보냈습니다.`,
+      });
 
-    addMember(newMember);
+      setEmail('');
+    } catch (error) {
+      console.error('팀원 초대 실패:', error);
 
-    setInviteModal({
-      type: 'success',
-      title: '초대 완료!',
-      message: `에게 팀원 초대를 보냈습니다.`,
-    });
+      setInviteModal({
+        type: 'error',
+        title: '초대할 수 없습니다.',
+        message: error.message || '팀원 초대에 실패했습니다.',
+      });
+    }
   };
 
   const handleModalConfirm = () => {

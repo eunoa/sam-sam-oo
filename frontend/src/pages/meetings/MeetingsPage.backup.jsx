@@ -1,6 +1,6 @@
 import './MeetingsPage.css';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import MeetingCard from '../../components/meeting/MeetingCard';
@@ -13,19 +13,11 @@ function MeetingsPage() {
   const {
     meetings,
     toggleImportant,
-    fetchMeetings,
   } = useMeetings();
 
   const [activeTab, setActiveTab] = useState(
     location.state?.activeTab || 'all'
   );
-
-
-  useEffect(() => {
-    if (location.state?.refresh) {
-      fetchMeetings();
-    }
-  }, [location.state]);
 
   const today = new Date();
 
@@ -52,8 +44,8 @@ function MeetingsPage() {
 
   const hasMinutes = (meeting) => {
     return (
-      meeting.manualContent &&
-      meeting.manualContent.trim() !== ''
+      meeting.minutes &&
+      meeting.minutes.trim() !== ''
     );
   };
 

@@ -214,16 +214,21 @@ function DashboardPage() {
     setOpenProjectMenu(null);
   };
 
-  const handleConfirmDeleteProject = () => {
+  const handleConfirmDeleteProject = async () => {
     if (!deleteProjectTarget) {
       return;
     }
 
-    deleteProject(deleteProjectTarget.projectId);
+    try {
+      await deleteProject(deleteProjectTarget.projectId);
 
-    setDeleteProjectTarget(null);
-    setRemoveMemberProjectId(null);
-    setSelectedMember(null);
+      setDeleteProjectTarget(null);
+      setRemoveMemberProjectId(null);
+      setSelectedMember(null);
+    } catch (error) {
+      console.error('프로젝트 삭제 실패:', error);
+      alert('프로젝트 삭제에 실패했습니다: ' + (error.response?.data?.message || error.message));
+    }
   };
 
   /*

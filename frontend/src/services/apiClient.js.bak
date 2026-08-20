@@ -5,7 +5,6 @@ const getAccessToken = () => {
 };
 
 const request = async (endpoint, options = {}) => {
-  console.log('API 요청:', { method: options.method || 'GET', url: `${endpoint}`, body: options.body });
   const token = getAccessToken();
 
   const headers = {

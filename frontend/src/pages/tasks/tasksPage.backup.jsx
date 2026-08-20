@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { useTasks } from '../../context/TaskContext';
+import { getAllTasks } from '../../services/taskService';
+import { getCurrentUser } from '../../services/userService';
 import TaskColumn from '../../components/task/TaskColumn';
 import TaskRow from '../../components/task/TaskRow';
 
@@ -22,9 +23,9 @@ function TasksPage() {
   const [activeTab, setActiveTab] = useState('all');
   const [viewMode, setViewMode] = useState('board');
 
+  const currentUser = getCurrentUser();
+  const tasks = getAllTasks();
 
-  const { tasks } = useTasks();
-  const currentUser = { userId: 1 };
   const filteredTasks = tasks.filter((task) => {
     if (activeTab === 'mine') return task.assigneeId === currentUser.userId;
     if (activeTab === 'done') return task.status === 'DONE';

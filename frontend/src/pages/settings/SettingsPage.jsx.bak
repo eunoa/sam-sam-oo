@@ -8,7 +8,10 @@ import {
 } from '../../services/userService';
 import { COUNTRIES } from '../../constants/countries';
 import api from '../../api/axiosInstance';
+import { mockLogout } from '../../api/mockAuth';
 import './SettingsPage.css';
+
+const USE_MOCK_AUTH = import.meta.env.VITE_USE_MOCK_AUTH === 'true';
 
 const LANGUAGE_LABELS = {
   ko: '한국어',
@@ -70,7 +73,7 @@ function apiTimeToDraft(time) {
     };
   }
 
-  const [hourString, minuteString] = String(time).split(':');
+  const [hourString, minuteString] = time.split(':');
   const hour24 = Number(hourString);
   const minute = Number(minuteString);
 
@@ -90,21 +93,14 @@ function SettingsPage() {
   const [availabilities, setAvailabilities] = useState([]);
 
   const [loading, setLoading] = useState(true);
-  const [profileSaving, setProfileSaving] = useState(false);
-  const [languageSaving, setLanguageSaving] = useState(false);
-  const [timezoneSaving, setTimezoneSaving] = useState(false);
-  const [availabilitySaving, setAvailabilitySaving] = useState(false);
-
-  const [errorMessage, setErrorMessage] = useState('');
-
-  const fileInputRef = useRef(null);
+  const [saving, setSaving] = useState(false);
 
   const [name, setName] = useState('');
   const [position, setPosition] = useState('');
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [profileMessage, setProfileMessage] = useState('');
 
-  const [language, setLanguage] = useState('ko');
+  const [language, setLanguage] = useState('');
   const [languageMessage, setLanguageMessage] = useState('');
 
   const [countryLabel, setCountryLabel] = useState('');
@@ -123,47 +119,48 @@ function SettingsPage() {
   });
   const [activePicker, setActivePicker] = useState(null);
 
+  const fileInputRef = useRef(null);
+
   useEffect(() => {
     const loadSettings = async () => {
       try {
         setLoading(true);
-        setErrorMessage('');
 
-        const [userData, availabilityData] = await Promise.all([
+        const [user, availability] = await Promise.all([
           getCurrentUser(),
           getAvailability(),
         ]);
 
-        setCurrentUser(userData);
+        setCurrentUser(user);
 
-        setName(userData?.name ?? '');
-        setLanguage(userData?.language ?? 'ko');
+        setName(user?.name ?? '');
+        setLanguage(user?.language ?? '');
 
         const matchedCountry = COUNTRIES.find(
-          (country) => country.timezone === userData?.timezone
+          (country) => country.timezone === user?.timezone
         );
 
         setCountryLabel(
           matchedCountry?.label ?? COUNTRIES[0]?.label ?? ''
         );
 
-        setAvailabilities(
-          Array.isArray(availabilityData)
-            ? availabilityData
-            : availabilityData?.availabilities ?? []
-        );
+        setAvailabilities(availability ?? []);
       } catch (error) {
         console.error('설정 정보 로드 실패:', error);
-        setErrorMessage(
-          error.message || '설정 정보를 불러오지 못했습니다.'
-        );
       } finally {
         setLoading(false);
       }
     };
 
-    loadSettings();
-  }, []);
+    const token = localStorage.getItem('accessToken');
+
+    if (token) {
+      loadSettings();
+    } else {
+      setLoading(false);
+      navigate('/');
+    }
+  }, [navigate]);
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -189,54 +186,65 @@ function SettingsPage() {
     e.preventDefault();
 
     try {
-      setProfileSaving(true);
+      setSaving(true);
       setProfileMessage('');
-      setErrorMessage('');
 
       const updatedUser = await updateCurrentUser({
         name,
+        language: currentUser?.language,
+        timezone: currentUser?.timezone,
       });
 
-      setCurrentUser((prev) => ({
-        ...prev,
-        ...(updatedUser || {}),
-        name,
-      }));
+      setCurrentUser(updatedUser);
+
+      if (updatedUser?.name !== undefined) {
+        setName(updatedUser.name);
+      }
 
       setProfileMessage('변경사항이 저장되었습니다.');
     } catch (error) {
       console.error('프로필 저장 실패:', error);
-      setProfileMessage(
-        error.message || '프로필 저장에 실패했습니다.'
-      );
+      setProfileMessage(error.message || '프로필 저장에 실패했습니다.');
     } finally {
-      setProfileSaving(false);
+      setSaving(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      if (USE_MOCK_AUTH) {
+        await mockLogout();
+      } else {
+        await api.post('/users/logout');
+      }
+    } catch (error) {
+      console.error('로그아웃 API 실패:', error);
+    } finally {
+      localStorage.removeItem('accessToken');
+      navigate('/');
     }
   };
 
   const handleLanguageConfirm = async () => {
     try {
-      setLanguageSaving(true);
+      setSaving(true);
       setLanguageMessage('');
 
       const updatedUser = await updateCurrentUser({
+        name: currentUser?.name,
         language,
+        timezone: currentUser?.timezone,
       });
 
-      setCurrentUser((prev) => ({
-        ...prev,
-        ...(updatedUser || {}),
-        language,
-      }));
+      setCurrentUser(updatedUser);
+      setLanguage(updatedUser?.language ?? language);
 
       setLanguageMessage('언어가 변경되었습니다.');
     } catch (error) {
       console.error('언어 변경 실패:', error);
-      setLanguageMessage(
-        error.message || '언어 변경에 실패했습니다.'
-      );
+      setLanguageMessage(error.message || '언어 변경에 실패했습니다.');
     } finally {
-      setLanguageSaving(false);
+      setSaving(false);
     }
   };
 
@@ -250,38 +258,31 @@ function SettingsPage() {
     }
 
     try {
-      setTimezoneSaving(true);
+      setSaving(true);
       setTimezoneMessage('');
 
       const updatedUser = await updateCurrentUser({
+        name: currentUser?.name,
+        language: currentUser?.language,
         timezone: country.timezone,
       });
 
-      setCurrentUser((prev) => ({
-        ...prev,
-        ...(updatedUser || {}),
-        timezone: country.timezone,
-      }));
+      setCurrentUser(updatedUser);
+
+      const matchedCountry = COUNTRIES.find(
+        (candidate) => candidate.timezone === updatedUser?.timezone
+      );
+
+      if (matchedCountry) {
+        setCountryLabel(matchedCountry.label);
+      }
 
       setTimezoneMessage('시간대가 변경되었습니다.');
     } catch (error) {
       console.error('시간대 변경 실패:', error);
-      setTimezoneMessage(
-        error.message || '시간대 변경에 실패했습니다.'
-      );
+      setTimezoneMessage(error.message || '시간대 변경에 실패했습니다.');
     } finally {
-      setTimezoneSaving(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await api.post('/users/logout');
-    } catch (error) {
-      console.error('로그아웃 API 호출 실패:', error);
-    } finally {
-      localStorage.removeItem('accessToken');
-      navigate('/');
+      setSaving(false);
     }
   };
 
@@ -294,10 +295,6 @@ function SettingsPage() {
       : setEndDraft;
 
   const adjustHour = (delta) => {
-    if (!activePicker) {
-      return;
-    }
-
     setActiveDraft((prev) => {
       let hour = prev.hour + delta;
 
@@ -317,10 +314,6 @@ function SettingsPage() {
   };
 
   const adjustMinute = (delta) => {
-    if (!activePicker) {
-      return;
-    }
-
     setActiveDraft((prev) => ({
       ...prev,
       minute: (prev.minute + delta + 60) % 60,
@@ -328,50 +321,19 @@ function SettingsPage() {
   };
 
   const togglePeriod = () => {
-    if (!activePicker) {
-      return;
-    }
-
     setActiveDraft((prev) => ({
       ...prev,
       period: prev.period === 'AM' ? 'PM' : 'AM',
     }));
   };
 
-  const saveAvailabilities = async (next) => {
-    try {
-      setAvailabilitySaving(true);
-
-      const normalized = next.map(
-        ({ dayOfWeek, startTime, endTime }) => ({
-          dayOfWeek,
-          startTime,
-          endTime,
-        })
-      );
-
-      await updateAvailability(normalized);
-
-      const refreshed = await getAvailability();
-
-      setAvailabilities(
-        Array.isArray(refreshed)
-          ? refreshed
-          : refreshed?.availabilities ?? []
-      );
-
-      setActivePicker(null);
-    } catch (error) {
-      console.error('가능시간 저장 실패:', error);
-      setErrorMessage(
-        error.message || '가능시간 저장에 실패했습니다.'
-      );
-    } finally {
-      setAvailabilitySaving(false);
-    }
-  };
-
   const handleAddAvailability = async () => {
+    const newAvailability = {
+      dayOfWeek: selectedDay,
+      startTime: draftToApiTime(startDraft),
+      endTime: draftToApiTime(endDraft),
+    };
+
     const next = [
       ...availabilities.map(
         ({ dayOfWeek, startTime, endTime }) => ({
@@ -380,28 +342,55 @@ function SettingsPage() {
           endTime,
         })
       ),
-      {
-        dayOfWeek: selectedDay,
-        startTime: draftToApiTime(startDraft),
-        endTime: draftToApiTime(endDraft),
-      },
+      newAvailability,
     ];
 
-    await saveAvailabilities(next);
+    try {
+      setSaving(true);
+
+      await updateAvailability(next);
+
+      const updated = await getAvailability();
+
+      setAvailabilities(updated ?? []);
+      setActivePicker(null);
+    } catch (error) {
+      console.error('가능 시간 추가 실패:', error);
+      alert(error.message || '가능 시간 저장에 실패했습니다.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleDeleteAvailability = async (availabilityId) => {
     const next = availabilities
-      .filter(
-        (item) => item.availabilityId !== availabilityId
-      )
+      .filter((item) => item.availabilityId !== availabilityId)
       .map(({ dayOfWeek, startTime, endTime }) => ({
         dayOfWeek,
         startTime,
         endTime,
       }));
 
-    await saveAvailabilities(next);
+    try {
+      setSaving(true);
+
+      await updateAvailability(next);
+
+      const updated = await getAvailability();
+
+      setAvailabilities(updated ?? []);
+    } catch (error) {
+      console.error('가능 시간 삭제 실패:', error);
+      alert(error.message || '가능 시간 삭제에 실패했습니다.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleAvailabilityItemClick = (item) => {
+    setSelectedDay(item.dayOfWeek);
+    setStartDraft(apiTimeToDraft(item.startTime));
+    setEndDraft(apiTimeToDraft(item.endTime));
   };
 
   if (loading) {
@@ -412,29 +401,9 @@ function SettingsPage() {
         </header>
 
         <div className="settings-page-body">
-          <div className="settings-page-content">
-            <p className="settings-page-notice">
-              설정 정보를 불러오는 중입니다...
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!currentUser) {
-    return (
-      <div className="settings-page">
-        <header className="settings-page-header">
-          <h1>설정</h1>
-        </header>
-
-        <div className="settings-page-body">
-          <div className="settings-page-content">
-            <p className="settings-page-notice">
-              {errorMessage || '사용자 정보를 불러오지 못했습니다.'}
-            </p>
-          </div>
+          <p className="settings-page-notice">
+            설정 정보를 불러오는 중입니다...
+          </p>
         </div>
       </div>
     );
@@ -463,12 +432,6 @@ function SettingsPage() {
         </nav>
 
         <div className="settings-page-content">
-          {errorMessage && (
-            <p className="settings-page-notice">
-              {errorMessage}
-            </p>
-          )}
-
           {activeTab === 'profile' && (
             <>
               <section className="settings-page-section">
@@ -511,24 +474,18 @@ function SettingsPage() {
 
                     <div className="settings-page-fields">
                       <div className="settings-page-field">
-                        <label htmlFor="name">
-                          이름
-                        </label>
+                        <label htmlFor="name">이름</label>
 
                         <input
                           id="name"
                           type="text"
                           value={name}
-                          onChange={(e) =>
-                            setName(e.target.value)
-                          }
+                          onChange={(e) => setName(e.target.value)}
                         />
                       </div>
 
                       <div className="settings-page-field">
-                        <label htmlFor="position">
-                          직책
-                        </label>
+                        <label htmlFor="position">직책</label>
 
                         <input
                           id="position"
@@ -542,14 +499,12 @@ function SettingsPage() {
                       </div>
 
                       <div className="settings-page-field">
-                        <label htmlFor="email">
-                          이메일
-                        </label>
+                        <label htmlFor="email">이메일</label>
 
                         <input
                           id="email"
                           type="email"
-                          value={currentUser.email ?? ''}
+                          value={currentUser?.email ?? ''}
                           disabled
                         />
                       </div>
@@ -566,11 +521,9 @@ function SettingsPage() {
                     <button
                       type="submit"
                       className="settings-page-save-button"
-                      disabled={profileSaving}
+                      disabled={saving}
                     >
-                      {profileSaving
-                        ? '저장 중...'
-                        : '변경사항 저장'}
+                      {saving ? '저장 중...' : '변경사항 저장'}
                     </button>
                   </div>
                 </form>
@@ -580,9 +533,7 @@ function SettingsPage() {
                 <h2>언어 설정</h2>
 
                 <div className="settings-page-language-row">
-                  <label htmlFor="language">
-                    언어
-                  </label>
+                  <label htmlFor="language">언어</label>
 
                   <div className="settings-page-language-controls">
                     <select
@@ -606,11 +557,9 @@ function SettingsPage() {
                       type="button"
                       className="settings-page-confirm-button"
                       onClick={handleLanguageConfirm}
-                      disabled={languageSaving}
+                      disabled={saving}
                     >
-                      {languageSaving
-                        ? '저장 중...'
-                        : '확인'}
+                      확인
                     </button>
                   </div>
                 </div>
@@ -640,9 +589,7 @@ function SettingsPage() {
                 <h2>나라 시각 설정</h2>
 
                 <div className="settings-page-language-row">
-                  <label htmlFor="country">
-                    국가
-                  </label>
+                  <label htmlFor="country">국가</label>
 
                   <div className="settings-page-language-controls">
                     <select
@@ -666,11 +613,9 @@ function SettingsPage() {
                       type="button"
                       className="settings-page-confirm-button"
                       onClick={handleCountryConfirm}
-                      disabled={timezoneSaving}
+                      disabled={saving}
                     >
-                      {timezoneSaving
-                        ? '저장 중...'
-                        : '확인'}
+                      확인
                     </button>
                   </div>
                 </div>
@@ -706,9 +651,7 @@ function SettingsPage() {
                   <button
                     type="button"
                     className={`availability-time-button ${
-                      activePicker === 'start'
-                        ? 'active'
-                        : ''
+                      activePicker === 'start' ? 'active' : ''
                     }`}
                     onClick={() =>
                       setActivePicker(
@@ -724,9 +667,7 @@ function SettingsPage() {
                   <button
                     type="button"
                     className={`availability-time-button ${
-                      activePicker === 'end'
-                        ? 'active'
-                        : ''
+                      activePicker === 'end' ? 'active' : ''
                     }`}
                     onClick={() =>
                       setActivePicker(
@@ -743,11 +684,9 @@ function SettingsPage() {
                     type="button"
                     className="settings-page-confirm-button"
                     onClick={handleAddAvailability}
-                    disabled={availabilitySaving}
+                    disabled={saving}
                   >
-                    {availabilitySaving
-                      ? '저장 중...'
-                      : '확인'}
+                    확인
                   </button>
                 </div>
 
@@ -772,9 +711,7 @@ function SettingsPage() {
                       <div className="time-picker-column">
                         <button
                           type="button"
-                          onClick={() =>
-                            adjustHour(1)
-                          }
+                          onClick={() => adjustHour(1)}
                         >
                           ▲
                         </button>
@@ -785,9 +722,7 @@ function SettingsPage() {
 
                         <button
                           type="button"
-                          onClick={() =>
-                            adjustHour(-1)
-                          }
+                          onClick={() => adjustHour(-1)}
                         >
                           ▼
                         </button>
@@ -800,9 +735,7 @@ function SettingsPage() {
                       <div className="time-picker-column">
                         <button
                           type="button"
-                          onClick={() =>
-                            adjustMinute(5)
-                          }
+                          onClick={() => adjustMinute(5)}
                         >
                           ▲
                         </button>
@@ -813,9 +746,7 @@ function SettingsPage() {
 
                         <button
                           type="button"
-                          onClick={() =>
-                            adjustMinute(-5)
-                          }
+                          onClick={() => adjustMinute(-5)}
                         >
                           ▼
                         </button>
@@ -829,9 +760,7 @@ function SettingsPage() {
                           ▲
                         </button>
 
-                        <span>
-                          {activeDraft.period}
-                        </span>
+                        <span>{activeDraft.period}</span>
 
                         <button
                           type="button"
@@ -848,11 +777,11 @@ function SettingsPage() {
                   {availabilities.length > 0 ? (
                     availabilities.map((item) => (
                       <div
-                        key={
-                          item.availabilityId ??
-                          `${item.dayOfWeek}-${item.startTime}-${item.endTime}`
-                        }
+                        key={item.availabilityId}
                         className="availability-item"
+                        onClick={() =>
+                          handleAvailabilityItemClick(item)
+                        }
                       >
                         <span className="availability-item-day">
                           {dayLabel(item.dayOfWeek)}
@@ -865,12 +794,12 @@ function SettingsPage() {
                         <button
                           type="button"
                           className="availability-delete-button"
-                          onClick={() =>
+                          onClick={(e) => {
+                            e.stopPropagation();
                             handleDeleteAvailability(
                               item.availabilityId
-                            )
-                          }
-                          disabled={availabilitySaving}
+                            );
+                          }}
                         >
                           삭제
                         </button>

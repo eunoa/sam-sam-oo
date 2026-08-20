@@ -29,8 +29,8 @@ function MeetingCard({
   );
 
   const hasMinutes =
-    meeting.minutes &&
-    meeting.minutes.trim() !== '';
+    meeting.manualContent &&
+    meeting.manualContent.trim() !== '';
 
   return (
     <article
@@ -72,7 +72,7 @@ function MeetingCard({
             onMinutesClick && (
               <button
                 type="button"
-                className="meeting-minutes-button"
+                className="meeting.manualContent-button"
                 onClick={(event) => {
                   event.stopPropagation();
                   onMinutesClick();

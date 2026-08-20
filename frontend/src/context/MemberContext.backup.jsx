@@ -10,14 +10,16 @@ import {
 
 const MemberContext = createContext(null);
 
-const normalizeMember = (projectId, member) => ({
-  ...member,
-  projectId,
-  memberId: member.userId,
-  userId: member.userId,
-  profileImage: member.profileImage || '',
-  activeTasks: member.activeTasks || 0,
-});
+function normalizeMember(projectId, member) {
+  return {
+    ...member,
+    projectId,
+    memberId: member.userId,
+    userId: member.userId,
+    profileImage: member.profileImage || '',
+    activeTasks: member.activeTasks || 0,
+  };
+}
 
 export function MemberProvider({ children }) {
   const { projects } = useProjects();
@@ -51,7 +53,7 @@ export function MemberProvider({ children }) {
       return allMembers;
     } catch (error) {
       console.error('팀원 목록 로드 실패:', error);
-      return [];
+      throw error;
     } finally {
       setLoading(false);
     }
