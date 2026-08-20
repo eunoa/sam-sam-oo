@@ -161,3 +161,206 @@ AI 업무 추천
 담당자의 MY 업무에 전달
       ↓
 TODO → IN_PROGRESS → DONE
+```
+
+---
+
+## 기술 스택
+
+### 백엔드
+
+- Java 17
+- Spring Boot
+- Spring Data JPA
+- Spring Security
+- JWT Authentication
+- Gradle
+- H2 Database
+
+### 프론트엔드
+
+- React
+- Vite
+- JavaScript
+- React Router
+- Axios
+- CSS
+
+### AI
+
+- OpenAI API
+- AI Meeting Summary
+- AI Meeting Time Recommendation
+- AI Task Suggestion
+- AI Translation
+
+### 협업 도구
+
+- Git
+- GitHub
+- GitHub Pull Request
+- Feature Branch Workflow
+
+---
+
+## 프로젝트 구조
+
+```text
+sam-sam-oo/
+│
+├── backend/
+│   └── coordinator/
+│       ├── src/
+│       ├── build.gradle
+│       └── gradlew
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   └── utils/
+│   │
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+├── docs/
+│
+└── README.md
+```
+
+---
+
+## 실행 방법
+
+### 백엔드
+
+#### Linux / macOS
+
+```bash
+cd backend/coordinator
+./gradlew bootRun
+```
+
+#### Windows PowerShell
+
+```powershell
+cd backend\coordinator
+.\gradlew bootRun
+```
+
+기본 실행 주소:
+
+```text
+http://localhost:8080
+```
+
+### 프론트엔드
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+기본 실행 주소:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## 배포용 빌드
+
+### 프론트엔드
+
+```bash
+cd frontend
+npm run build
+```
+
+### 백엔드
+
+#### Linux / macOS
+
+```bash
+cd backend/coordinator
+./gradlew clean build
+```
+
+#### Windows PowerShell
+
+```powershell
+cd backend\coordinator
+.\gradlew clean build
+```
+
+---
+
+## 인증 방식
+
+WorkBridge는 JWT 기반 인증 방식을 사용합니다.
+
+로그인 성공 시 발급된 Access Token을 API 요청의 `Authorization` Header에 전달합니다.
+
+```http
+Authorization: Bearer {accessToken}
+```
+
+---
+
+## 팀원
+
+| 이름 | 역할 |
+| --- | --- |
+| 이도빈 | Backend |
+| 김우진 | Backend |
+| 이재원 | Frontend |
+| 김민준 | Frontend |
+| 이예나 | Design |
+| 지혜미 | Design |
+
+---
+
+## Git 협업 규칙
+
+### 브랜치 전략
+
+```text
+main
+  ↑
+develop
+  ↑
+feature/* / fix/*
+```
+
+- `main` 브랜치에 직접 push하지 않습니다.
+- `develop` 브랜치를 기준으로 기능별 브랜치를 생성합니다.
+- 기능 개발 완료 후 Pull Request를 생성합니다.
+- 코드 및 기능 확인 후 `develop`에 merge합니다.
+- 최종 통합 및 검증이 완료되면 `develop`을 `main`에 merge합니다.
+
+### 커밋 규칙
+
+```text
+feat: 새로운 기능 추가
+fix: 버그 수정
+docs: 문서 수정
+style: UI / 스타일 수정
+refactor: 코드 구조 개선
+merge: 브랜치 병합 및 충돌 해결
+```
+
+---
+
+## WorkBridge
+
+**AI가 회의 시간을 조율하고,  
+회의 내용을 이해하고,  
+언어의 장벽을 줄이고,  
+회의 결과를 실제 업무로 연결합니다.**
+
+> From Meeting to Action, WorkBridge connects global teams.
