@@ -23,7 +23,6 @@ export function MeetingProvider({ children }) {
 
   const fetchMeetings = async (projectId) => {
     if (!projectId) {
-      setMeetings([]);
       return [];
     }
 
@@ -33,94 +32,116 @@ export function MeetingProvider({ children }) {
       const data = await getMeetings(projectId);
 
       const list = Array.isArray(data)
-        ? data
-        : data?.meetings || data?.content || [];
+          ? data
+          : data?.meetings || data?.content || [];
 
-      setMeetings([...list]);
+      setMeetings(list);
+
       console.log('회의 목록 데이터:', list);
 
       return list;
     } catch (error) {
-      console.error('회의 목록 로드 실패:', error);
+      console.error(
+          '회의 목록 로드 실패:',
+          error
+      );
+
       setMeetings([]);
+
       return [];
     } finally {
       setLoading(false);
     }
   };
 
-
-  const saveMinutes = async (meetingId, manualContent) => {
-    await updateMeetingContent(
+  const saveMinutes = async (
       meetingId,
       manualContent
+  ) => {
+    await updateMeetingContent(
+        meetingId,
+        manualContent
     );
 
     if (currentProject?.projectId) {
-      await fetchMeetings(currentProject.projectId);
+      await fetchMeetings(
+          currentProject.projectId
+      );
     }
   };
-
 
   const toggleImportant = async (
-    meetingId
+      meetingId
   ) => {
     const target = meetings.find(
-      (meeting) =>
-        meeting.meetingId === meetingId
+        (meeting) =>
+            meeting.meetingId === meetingId
     );
 
-    if (!target) return;
+    if (!target) {
+      return;
+    }
 
-    const next =
-      !target.isImportant;
+    const next = !target.important;
 
-    await updateMeetingImportant(
-      meetingId,
-      next
-    );
+    try {
+      await updateMeetingImportant(
+          meetingId,
+          next
+      );
 
-    setMeetings((prev) =>
-      prev.map((meeting) =>
-        meeting.meetingId === meetingId
-          ? {
-              ...meeting,
-              isImportant: next,
-            }
-          : meeting
-      )
-    );
+      setMeetings((prev) =>
+          prev.map((meeting) =>
+              meeting.meetingId === meetingId
+                  ? {
+                    ...meeting,
+                    important: next,
+                  }
+                  : meeting
+          )
+      );
+    } catch (error) {
+      console.error(
+          '중요 회의 상태 변경 실패:',
+          error
+      );
+    }
   };
 
-
   useEffect(() => {
-    if (currentProject?.projectId) {
-      fetchMeetings(currentProject.projectId);
-    } else {
-      setMeetings([]);
-    }
+    const loadMeetings = async () => {
+      if (!currentProject?.projectId) {
+        return;
+      }
+
+      await fetchMeetings(
+          currentProject.projectId
+      );
+    };
+
+    void loadMeetings();
   }, [currentProject?.projectId]);
 
+  const value = {
+    meetings,
+    setMeetings,
+    fetchMeetings,
+    saveMinutes,
+    toggleImportant,
+    loading,
+  };
 
   return (
-    <MeetingContext.Provider
-      value={{
-        meetings,
-        setMeetings,
-        fetchMeetings,
-        saveMinutes,
-        toggleImportant,
-        loading,
-      }}
-    >
-      {children}
-    </MeetingContext.Provider>
+      <MeetingContext.Provider value={value}>
+        {children}
+      </MeetingContext.Provider>
   );
 }
 
+export function useMeeting() {
+  return useContext(MeetingContext) || {};
+}
 
-export const useMeeting = () =>
-  useContext(MeetingContext) || {};
-
-export const useMeetings = () =>
-  useContext(MeetingContext) || {};
+export function useMeetings() {
+  return useContext(MeetingContext) || {};
+}

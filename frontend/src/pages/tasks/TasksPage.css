@@ -388,3 +388,187 @@
 
   text-align: right;
 }
+.taskboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.taskboard-create-button {
+  border: none;
+  border-radius: 18px;
+  padding: 9px 16px;
+  background: #315b96;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.taskboard-create-button:hover {
+  opacity: 0.9;
+}
+
+.taskboard-card-status-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.task-status-button {
+  border: none;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.task-status-start {
+  background: #315b96;
+  color: #ffffff;
+}
+
+.task-status-complete {
+  background: #315b96;
+  color: #ffffff;
+}
+
+.task-status-button:hover {
+  opacity: 0.9;
+}
+
+.task-status-finished {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.task-row-status-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 100px;
+  margin-left: auto;
+}
+
+/* =========================
+   Task 번역
+========================= */
+
+.task-translation-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.task-translation-controls select {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+.task-translate-button {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 11px;
+  background: #315b96;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.task-translate-button:hover {
+  opacity: 0.9;
+}
+
+.task-translate-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.task-translation-result {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f6f7f9;
+  border-radius: 8px;
+}
+
+.task-translation-result p {
+  margin: 0;
+  color: #374151;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+
+/* =========================
+   리스트형 번역
+========================= */
+
+.task-row-description-wrapper {
+  flex: 1;
+}
+
+.task-row-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.task-row-translation-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.task-row-translation-controls select {
+  padding: 7px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 7px;
+  background: #ffffff;
+  font-size: 12px;
+}
+
+.task-row-translation-result {
+  margin-top: 8px;
+  padding: 10px;
+  background: #f6f7f9;
+  border-radius: 8px;
+}
+
+.task-row-translation-result span {
+  display: block;
+  margin-bottom: 5px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.task-row-translation-result p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.task-translation-label {
+  display: block;
+  margin-bottom: 4px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.task-translation-title {
+  font-weight: 600;
+}

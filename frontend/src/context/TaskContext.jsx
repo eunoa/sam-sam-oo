@@ -34,14 +34,18 @@ export function TaskProvider({ children }) {
       const data = await getTasks(projectId);
 
       const nextTasks = Array.isArray(data)
-        ? data
-        : data?.tasks ?? [];
+          ? data
+          : data?.tasks ?? [];
 
       setTasks(nextTasks);
 
       return nextTasks;
     } catch (error) {
-      console.error('업무 목록 로드 실패:', error);
+      console.error(
+          '업무 목록 로드 실패:',
+          error
+      );
+
       setTasks([]);
       return [];
     } finally {
@@ -49,39 +53,57 @@ export function TaskProvider({ children }) {
     }
   };
 
-  const addTask = async (taskData) => {
-    if (!currentProject?.projectId) {
-      throw new Error('현재 프로젝트가 없습니다.');
+  /*
+   * 직접 업무 생성
+   */
+  const addTask = async (
+      taskData,
+      projectId = currentProject?.projectId
+  ) => {
+    if (!projectId) {
+      throw new Error(
+          '업무를 생성할 프로젝트가 없습니다.'
+      );
     }
 
-    const createdTask = await createTask(
-      currentProject.projectId,
-      taskData
-    );
+    const createdTask =
+        await createTask(
+            projectId,
+            taskData
+        );
 
-    setTasks((prevTasks) => [
-      ...prevTasks,
-      createdTask,
-    ]);
+    if (
+        String(currentProject?.projectId) ===
+        String(projectId)
+    ) {
+      setTasks((prevTasks) => [
+        ...prevTasks,
+        createdTask,
+      ]);
+    }
 
     return createdTask;
   };
 
-  const updateTask = async (taskId, updatedTask) => {
-    const updated = await updateTaskApi(
+  const updateTask = async (
       taskId,
       updatedTask
-    );
+  ) => {
+    const updated =
+        await updateTaskApi(
+            taskId,
+            updatedTask
+        );
 
     setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.taskId === taskId
-          ? {
-              ...task,
-              ...(updated || updatedTask),
-            }
-          : task
-      )
+        prevTasks.map((task) =>
+            task.taskId === taskId
+                ? {
+                  ...task,
+                  ...(updated || updatedTask),
+                }
+                : task
+        )
     );
 
     return updated;
@@ -91,43 +113,45 @@ export function TaskProvider({ children }) {
     await deleteTaskApi(taskId);
 
     setTasks((prevTasks) =>
-      prevTasks.filter(
-        (task) => task.taskId !== taskId
-      )
+        prevTasks.filter(
+            (task) =>
+                task.taskId !== taskId
+        )
     );
   };
 
   useEffect(() => {
     if (currentProject?.projectId) {
-      fetchTasks(currentProject.projectId);
-    } else {
-      setTasks([]);
+      void fetchTasks(
+          currentProject.projectId
+      );
     }
   }, [currentProject?.projectId]);
 
   return (
-    <TaskContext.Provider
-      value={{
-        tasks,
-        setTasks,
-        fetchTasks,
-        addTask,
-        updateTask,
-        deleteTask,
-        loading,
-      }}
-    >
-      {children}
-    </TaskContext.Provider>
+      <TaskContext.Provider
+          value={{
+            tasks,
+            setTasks,
+            fetchTasks,
+            addTask,
+            updateTask,
+            deleteTask,
+            loading,
+          }}
+      >
+        {children}
+      </TaskContext.Provider>
   );
 }
 
 export function useTasks() {
-  const context = useContext(TaskContext);
+  const context =
+      useContext(TaskContext);
 
   if (!context) {
     throw new Error(
-      'useTasks는 TaskProvider 안에서 사용해야 합니다.'
+        'useTasks는 TaskProvider 안에서 사용해야 합니다.'
     );
   }
 

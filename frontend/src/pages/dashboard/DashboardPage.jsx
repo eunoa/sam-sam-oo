@@ -297,18 +297,25 @@ function DashboardPage() {
   };
 
   /*
-   * =========================
-   * 최근 회의
-   * =========================
-   */
+ * =========================
+ * 최근 회의
+ *
+ * 회의록 작성까지 완료되어
+ * status가 FINISHED인 회의만 표시
+ * =========================
+ */
 
   const recentMeetings = [...meetings]
-    .sort(
-      (a, b) =>
-        new Date(b.scheduledAt) -
-        new Date(a.scheduledAt)
-    )
-    .slice(0, 4);
+      .filter(
+          (meeting) =>
+              meeting.status === 'FINISHED'
+      )
+      .sort(
+          (a, b) =>
+              new Date(b.scheduledAt) -
+              new Date(a.scheduledAt)
+      )
+      .slice(0, 4);
 
   /*
    * =========================
@@ -347,14 +354,8 @@ function DashboardPage() {
    */
 
   const leaderProjects = projects.filter(
-    (project) =>
-      members.some(
-        (member) =>
-          member.projectId ===
-            project.projectId &&
-          member.memberId === 1 &&
-          member.role === 'LEADER'
-      )
+      (project) =>
+          project.role === 'LEADER'
   );
 
   /*
@@ -1090,18 +1091,16 @@ function DashboardPage() {
 
             </div>
 
-            {meetings.length > 4 && (
-
-              <button
-                type="button"
-                className="view-all-button"
-                onClick={
-                  handleViewAllMeetings
-                }
-              >
-                모든 회의 보기
-              </button>
-
+            {recentMeetings.length >= 4 && (
+                <button
+                    type="button"
+                    className="view-all-button"
+                    onClick={
+                      handleViewAllMeetings
+                    }
+                >
+                  모든 회의 보기
+                </button>
             )}
 
           </section>
